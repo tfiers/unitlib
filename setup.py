@@ -8,7 +8,7 @@ with open("ReadMe.md", mode="r", encoding="utf-8") as f:
 
 setup(
     name="yunit",
-    description="📏⚖ Physical units for NumPy arrays. Fast • Simple • High voltage",
+    description="📏 Physical units for NumPy arrays. ⚖ Fast • Simple • High voltage",
     author="Tomas Fiers",
     author_email="tomas.fiers@gmail.com",
     long_description=readme,
