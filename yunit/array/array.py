@@ -100,9 +100,9 @@ class Array(NDArrayOperatorsMixin):
 
     def __format__(self, format_spec: str) -> str:
         # When no spec is given -- as is the case for `format(array)` and
-        # `f"The answer is: {array}!"` -- Python calls this `__format__` method with
+        # `f"f-strings such as this one, {array}"` -- Python calls this `__format__` method with
         # `format_spec = ""`
-        if format_spec == "":
+        if not format_spec:
             format_spec = ".4G"
         array_string = np.array2string(
             self.data_in_display_units,
@@ -123,32 +123,41 @@ class Array(NDArrayOperatorsMixin):
         # - `input[0] == self`.
         #   (So we could make `__array_ufunc__` a static method -- as we don't need the
         #   `self` first argument` -- but NumPy doesn't like that).
+
         if method != "__call__":
             # method == "reduce", "accumulate", ...
             raise NotImplementedError(
-                f"`{self.__class__.__name__}` does not yet support "
-                f'"{method}" ufuncs {self._DIY_help_text}'
+                f'`{self.__class__.__name__}` does not yet support "{method}" ufuncs. '
+                + self._DIY_help_text
             )
         if ufunc not in (np.add, np.subtract, np.multiply, np.divide):
             raise NotImplementedError(
-                f"`{self.__class__.__name__}` does not yet support the NumPy ufunc "
-                f"`{ufunc.__name__}` not yet supported. {self._DIY_help_text}"
+                f"`{self.__class__.__name__}` does not yet support the NumPy ufunc `{ufunc.__name__}`. "
+                + self._DIY_help_text
             )
+
+        #
+        # Parse inputs
+        #
         other = inputs[1]
-        if isinstance(other, Array):
+        if isinstance(other, Array):  # (8 mV) * (1 pF)
             other_data = other.data
             other_display_unit = other.display_unit
-        elif isinstance(other, Unit):
+        elif isinstance(other, Unit):  # (8 mV) * pF
             if ufunc in (np.add, np.subtract):
                 raise UnitError(
-                    f"Cannot {ufunc.__name__} a `{Unit.__name__}` "
-                    f"and a `{self.__class__.__name__}`."
+                    f"Cannot {ufunc.__name__} a `{Unit.__name__}` and a `{self.__class__.__name__}`."
                 )
             other_display_unit = other
             other_data = other_display_unit.conversion_factor
-        else:  # `other` is purely numeric (scalar or array-like)
+            #   Treat eg `pF` as if it was `1 * pF`.
+        else:  # `other` is purely numeric (scalar or array-like): (8 mV) * 2
             other_data = other
             other_display_unit = dimensionless
+
+        #
+        # Create output object
+        #
         new_display_unit = self._combine_units(other_display_unit, ufunc)
         if "out" in ufunc_kwargs:
             # This is an in-place operation (eg `array *= 2`). See
@@ -204,5 +213,5 @@ class Array(NDArrayOperatorsMixin):
 
     _DIY_help_text = (  # Shown when a NumPy operation is not implemented yet for our Array.
         "You can get the bare numeric data (a plain NumPy array) "
-        "via `your_array.data`, and work with it manually."
+        "via `array.data`, and work with it manually."
     )

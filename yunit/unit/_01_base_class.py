@@ -21,7 +21,7 @@ class Unit(ABC):
      - raised to a power (`meter**2`);
      - composed with other units (`newton * meter`);
      - applied to numeric data (`8*farad`, `[3,5]*mV`);
-     - applied to numeric data that already has units (`5*mV / nS`, `5*volt / mV`).
+        (even if that data already has units: `5*mV / nS`, `5*mV / mV`).
 
     This abstract base class ('ABC') defines an interface that all {..}Unit classes in
     this package implement.
@@ -45,12 +45,12 @@ class Unit(ABC):
         """
         A scalar multiple or submultiple of this `unit`, such that
         ```
-        unit == data_unit * conversion_factor
+        1 * unit == unit.conversion_factor * unit.data_unit
         ```
 
         Numeric data annotated with this `unit` is stored in `data_unit` units. For
         example, if this `unit` is "mV" and its `data_unit` is "volt" (with a
-        `conversion_factor` of 1E-3), the numeric data underlying the expression `8 mV`
+        `conversion_factor` of 1E-3), the numeric data underlying the expression `8 * mV`
         will be stored as `0.008` in memory.
         """
         ...
@@ -82,7 +82,7 @@ class Unit(ABC):
 
     @abstractmethod
     def __hash__(self) -> int:
-        ...
+        ...  # For subclasses to implement.
 
     #
     #
@@ -115,35 +115,47 @@ class Unit(ABC):
             conversion_factor=prefix.factor,
         )
 
+    #
+    #
+    # ----------------
+    # Unit composition
+
     # mV * farad
     def __mul__(self, other) -> "CompoundUnit":
-        if isinstance(other, Unit):
-            from ._04_compound_unit import CompoundUnit
+        from ._04_compound_unit import CompoundUnit
 
+        if isinstance(other, Unit):
             return CompoundUnit([self, other])
+        else:
+            return NotImplemented  # mV * 3
 
     # mV / farad
     def __truediv__(self, other):
         if isinstance(other, Unit):
             return self * (1 / other)
             # `1 / other` will defer to `Unit.__rtruediv__`.
+        else:
+            return NotImplemented  # mV / 3
 
     # mV ** 2
     def __pow__(self, power, modulo=None) -> "Unit":
-        if isinstance(power, int) and modulo is None:
+        if modulo is not None:
+            return NotImplemented
+        elif isinstance(power, int):
             return self._raised_to(power)
         else:
-            return NotImplemented
+            raise NotImplementedError("Fractional unit powers are not yet supported.")
 
     @abstractmethod
     def _raised_to(self, power: int) -> "Unit":
-        ...
+        ...  # For subclasses to implement.
 
     #
     #
     # -----------------------------------
     # `Quantity` and `Array` creation API
-    # (via `8 * mV` syntax)
+    #
+    # ..via `8 * mV` syntax
 
     @overload
     def __rmul__(self, other: Scalar) -> "Quantity":

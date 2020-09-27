@@ -24,8 +24,8 @@ class CompoundUnit(Unit):
         elif len(combined_units) == 1:
             return combined_units[0]
         else:
-            # `cls` can be `CompoundUnit` or `CompoundDataUnit`.
             compound_unit = object.__new__(cls)
+            #   `cls` can be `CompoundUnit` or `CompoundDataUnit`.
             compound_unit.components = combined_units
             return compound_unit
 

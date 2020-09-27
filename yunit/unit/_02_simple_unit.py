@@ -10,8 +10,8 @@ class SimpleUnit(PoweredUnit):
     def __new__(
         cls, name: str, data_unit: "SimpleDataUnit", conversion_factor: float,
     ):
-        # `cls` can be `SimpleUnit` or `SimpleDataUnit`.
         simple_unit = object.__new__(cls)
+        #   `cls` can be `SimpleUnit` or `SimpleDataUnit`.
         # We are a special case of a `PoweredUnit`:
         simple_unit.power = 1
         simple_unit.ground_unit = simple_unit

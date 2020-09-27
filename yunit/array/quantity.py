@@ -5,7 +5,7 @@ from ..unit import Unit
 
 class Quantity(Array):
     """
-    A scalar number with a physical unit.
+    A scalar number with a physical unit, such as `8 * mV`.
 
     See `Array`.
     """

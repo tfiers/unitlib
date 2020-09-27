@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 class PoweredUnit(Unit):
     """
     Eg "mm²"; as contrasted with "mm" (a `SimpleUnit`) or "N/mm²" (a `CompoundUnit`).
-    
+
     Attributes:
         - ground_unit: SimpleUnit
         - power: int
@@ -21,14 +21,15 @@ class PoweredUnit(Unit):
 
         if power == 0:
             from ._02_simple_unit import dimensionless
+
             return dimensionless
 
         elif power == 1:
             return ground_unit
 
         else:
-            # `cls` can be `PoweredUnit` or `Powered`.
             powered_unit = object.__new__(cls)
+            #   `cls` can be `PoweredUnit` or `PoweredDataUnit`.
             powered_unit.ground_unit = ground_unit
             powered_unit.power = power
             return powered_unit
@@ -50,8 +51,8 @@ class PoweredUnit(Unit):
 
     # (mV⁻³)**2
     def _raised_to(self, power: int):
-        # `self.__class__` can be `PoweredUnit` or `PoweredDataUnit`.
         return self.__class__(self.ground_unit, self.power * power)
+        #   `self.__class__` can be `PoweredUnit` or `PoweredDataUnit`.
 
     @property
     def _power_as_superscript(self) -> str:
