@@ -1,11 +1,11 @@
 from typing import TYPE_CHECKING
 
-from ._01_base_class import BaseUnit, Unit
+from ._01_base_class import DataUnit, Unit
 
 
 if TYPE_CHECKING:
     # See the explanation of `if TYPE_CHECKING` in ../ReadMe.
-    from ._02_simple_unit import SimpleUnit, SimpleBaseUnit
+    from ._02_simple_unit import SimpleUnit, SimpleDataUnit
 
 
 class PoweredUnit(Unit):
@@ -27,7 +27,7 @@ class PoweredUnit(Unit):
             return ground_unit
 
         else:
-            # `cls` can be `PoweredUnit` or `PoweredBaseUnit`.
+            # `cls` can be `PoweredUnit` or `Powered`.
             powered_unit = object.__new__(cls)
             powered_unit.ground_unit = ground_unit
             powered_unit.power = power
@@ -38,8 +38,8 @@ class PoweredUnit(Unit):
         return f"{self.ground_unit.name}{self._power_as_superscript}"
 
     @property
-    def base_unit(self):
-        return self.ground_unit.base_unit ** self.power
+    def data_unit(self):
+        return self.ground_unit.data_unit ** self.power
 
     @property
     def conversion_factor(self):
@@ -50,7 +50,7 @@ class PoweredUnit(Unit):
 
     # (mV⁻³)**2
     def _raised_to(self, power: int):
-        # `self.__class__` can be `PoweredUnit` or `PoweredBaseUnit`.
+        # `self.__class__` can be `PoweredUnit` or `PoweredDataUnit`.
         return self.__class__(self.ground_unit, self.power * power)
 
     @property
@@ -64,6 +64,6 @@ class PoweredUnit(Unit):
         return "".join(output_chars)
 
 
-class PoweredBaseUnit(BaseUnit, PoweredUnit):
-    def __new__(cls, ground_unit: "SimpleBaseUnit", power: int):
+class PoweredDataUnit(DataUnit, PoweredUnit):
+    def __new__(cls, ground_unit: "SimpleDataUnit", power: int):
         return PoweredUnit.__new__(cls, ground_unit, power)

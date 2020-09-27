@@ -3,7 +3,7 @@
 
 from .array import Array
 from ..type_aliases import Scalar
-from ..unit import BaseUnit, Unit
+from ..unit import DataUnit, Unit
 
 class Quantity(Array):
     def __init__(
@@ -15,7 +15,7 @@ class Quantity(Array):
     value: Scalar
     value_in_display_units: Scalar
     vd: Scalar
-    value_unit: BaseUnit
+    value_unit: DataUnit
     # A `Quantity + Quantity` remains a `Quantity`, but a `Quantity + Array` becomes an
     # `Array`. That's why for the below operations we only specify that a `Quantity` is
     # returned when `other` is also a `Quantity`.

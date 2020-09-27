@@ -1,4 +1,4 @@
-from ._03_powered_unit import PoweredBaseUnit, PoweredUnit
+from ._03_powered_unit import PoweredDataUnit, PoweredUnit
 
 
 class SimpleUnit(PoweredUnit):
@@ -8,9 +8,9 @@ class SimpleUnit(PoweredUnit):
     """
 
     def __new__(
-        cls, name: str, base_unit: "SimpleBaseUnit", conversion_factor: float,
+        cls, name: str, data_unit: "SimpleDataUnit", conversion_factor: float,
     ):
-        # `cls` can be `SimpleUnit` or `SimpleBaseUnit`.
+        # `cls` can be `SimpleUnit` or `SimpleDataUnit`.
         simple_unit = object.__new__(cls)
         # We are a special case of a `PoweredUnit`:
         simple_unit.power = 1
@@ -23,7 +23,7 @@ class SimpleUnit(PoweredUnit):
         # (And no, using `simple_unit.name = property(..)`
         #  or `simple_unit.__dict__["name"] = ..` also doesn't work :) ).
         simple_unit._name = name
-        simple_unit._base_unit = base_unit
+        simple_unit._data_unit = data_unit
         simple_unit._conversion_factor = conversion_factor
         return simple_unit
 
@@ -32,21 +32,21 @@ class SimpleUnit(PoweredUnit):
         return self._name
 
     @property
-    def base_unit(self):
-        return self._base_unit
+    def data_unit(self):
+        return self._data_unit
 
     @property
     def conversion_factor(self):
         return self._conversion_factor
 
     def __hash__(self):
-        return hash((self.name, self.base_unit, self.conversion_factor))
+        return hash((self.name, self.data_unit, self.conversion_factor))
 
     def _raised_to(self, power):
         return PoweredUnit(self, power)
 
 
-class SimpleBaseUnit(PoweredBaseUnit, SimpleUnit):
+class SimpleDataUnit(PoweredDataUnit, SimpleUnit):
     def __new__(cls, name: str):
         return SimpleUnit.__new__(cls, name, ..., ...)
 
@@ -54,7 +54,7 @@ class SimpleBaseUnit(PoweredBaseUnit, SimpleUnit):
         return hash(self.name)
 
     def _raised_to(self, power):
-        return PoweredBaseUnit(self, power)
+        return PoweredDataUnit(self, power)
 
 
-dimensionless = SimpleBaseUnit("1")
+dimensionless = SimpleDataUnit("1")

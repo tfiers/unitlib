@@ -9,7 +9,7 @@ from ..type_aliases import ArrayLike, Scalar, scalar_types
 if TYPE_CHECKING:
     # See the explanation of `if TYPE_CHECKING` in ../ReadMe.
     from ..array import Array, Quantity
-    from ._02_simple_unit import SimpleUnit, SimpleBaseUnit
+    from ._02_simple_unit import SimpleUnit, SimpleDataUnit
     from ._04_compound_unit import CompoundUnit
 
 
@@ -41,15 +41,15 @@ class Unit(ABC):
         ...
 
     @abstractproperty
-    def base_unit(self) -> "BaseUnit":
+    def data_unit(self) -> "DataUnit":
         """
         A scalar multiple or submultiple of this `unit`, such that
         ```
-        unit == base_unit * conversion_factor
+        unit == data_unit * conversion_factor
         ```
 
-        Numeric data annotated with this `unit` is stored in `base_unit` units. For
-        example, if this `unit` is "mV" and its `base_unit` is "volt" (with a
+        Numeric data annotated with this `unit` is stored in `data_unit` units. For
+        example, if this `unit` is "mV" and its `data_unit` is "volt" (with a
         `conversion_factor` of 1E-3), the numeric data underlying the expression `8 mV`
         will be stored as `0.008` in memory.
         """
@@ -58,11 +58,11 @@ class Unit(ABC):
     @abstractproperty
     def conversion_factor(self) -> Number:
         """
-        With what to multiply one `base_unit` to get one of this unit.
+        With what to multiply one `data_unit` to get one of this unit.
 
-        For example, if this unit is "minute", with a base unit of "second",
+        For example, if this unit is "minute", with a data unit of "second",
         `conversion_factor` is 60.
-        See also `base_unit`.
+        See also `data_unit`.
         """
         ...
 
@@ -92,26 +92,26 @@ class Unit(ABC):
     def __new__(
         cls,
         name: str,
-        base_unit: Optional["SimpleBaseUnit"] = None,
+        data_unit: Optional["SimpleDataUnit"] = None,
         conversion_factor: Optional[float] = 1,
     ):
         # Use `Unit`'s constructor as a shorthand to create new
-        # `SimpleUnit`s and `SimpleBaseUnit`s.
+        # `SimpleUnit`s and `SimpleDataUnit`s.
 
-        from ._02_simple_unit import SimpleUnit, SimpleBaseUnit
+        from ._02_simple_unit import SimpleUnit, SimpleDataUnit
 
-        if base_unit is None:
-            return SimpleBaseUnit(name)
+        if data_unit is None:
+            return SimpleDataUnit(name)
         else:
-            return SimpleUnit(name, base_unit, conversion_factor)
+            return SimpleUnit(name, data_unit, conversion_factor)
 
     @staticmethod
-    def from_prefix(prefix: Prefix, base_unit: "SimpleBaseUnit") -> "SimpleUnit":
+    def from_prefix(prefix: Prefix, data_unit: "SimpleDataUnit") -> "SimpleUnit":
         from ._02_simple_unit import SimpleUnit
 
         return SimpleUnit(
-            name=f"{prefix.symbol}{base_unit.name}",
-            base_unit=base_unit,
+            name=f"{prefix.symbol}{data_unit.name}",
+            data_unit=data_unit,
             conversion_factor=prefix.factor,
         )
 
@@ -179,15 +179,15 @@ class Unit(ABC):
             return other * reciprocal_unit
 
 
-class BaseUnit(Unit, ABC):
+class DataUnit(Unit, ABC):
     """
     A `Unit` in which numeric data is stored in memory.
 
-    See the `Unit.base_unit` property.
+    See the `Unit.data_unit` property.
     """
 
     @property
-    def base_unit(self):
+    def data_unit(self):
         return self
 
     @property

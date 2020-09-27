@@ -32,7 +32,7 @@ class Array(NDArrayOperatorsMixin):
 
     This class is a wrapper around a NumPy `ndarray` (the `data` attribute), augmented
     with a `Unit` (the `display_unit` attribute). The data is stored -- and calculations
-    with the data are done -- in the `base_unit` of this `display_unit`. The
+    with the data are done -- in the `data_unit` of this `display_unit`. The
     `display_unit` is only used at Array creation time and when printing the Array.
     """
 
@@ -67,8 +67,8 @@ class Array(NDArrayOperatorsMixin):
         :param display_unit:  Units in which to display the data.
         :param data_are_given_in_display_units:  If True (default), the given `data` is
                     taken to be expressed in `display_unit`s, and is converted to and
-                    stored internally in `display_unit.base_unit`s. If False, `data`
-                    is taken to be already expressed in `display_unit.base_unit`s,
+                    stored internally in `display_unit.data_unit`s. If False, `data`
+                    is taken to be already expressed in `display_unit.data_unit`s,
                     and no conversion is done.
         """
         data_as_array = np.asarray(data)
@@ -82,7 +82,7 @@ class Array(NDArrayOperatorsMixin):
 
     @property
     def data_unit(self):
-        return self.display_unit.base_unit
+        return self.display_unit.data_unit
 
     @property
     def data_in_display_units(self) -> np.ndarray:
@@ -167,7 +167,7 @@ class Array(NDArrayOperatorsMixin):
 
     def _combine_units(self, other_display_unit: Unit, ufunc: np.ufunc) -> Unit:
         if ufunc in (np.add, np.subtract):
-            if self.display_unit.base_unit != other_display_unit.base_unit:
+            if self.display_unit.data_unit != other_display_unit.data_unit:
                 # 1*mV + (3*nS)
                 raise UnitError(
                     f"Cannot {ufunc.__name__} incompatible units {self.display_unit} "

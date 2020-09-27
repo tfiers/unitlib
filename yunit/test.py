@@ -11,23 +11,23 @@ nV = Unit.from_prefix(nano, volt)
 
 second = Unit("s")
 ms = Unit.from_prefix(milli, second)
-minute = Unit("min", base_unit=second, conversion_factor=60)
+minute = Unit("min", data_unit=second, conversion_factor=60)
 
 siemens = Unit("S")
 nS = Unit.from_prefix(nano, siemens)
 
 
 umu = volt * ms
-assert umu.base_unit == volt * second
+assert umu.data_unit == volt * second
 assert is_close(umu.conversion_factor, 0.001)
 
 udu = mV / nS
-assert udu.base_unit == volt / siemens
+assert udu.data_unit == volt / siemens
 assert is_close(udu.conversion_factor, 1e6)
 
 umudu = nV * nS / mV
 udumu = nV * (nS / mV)
-assert umudu.base_unit == udumu.base_unit == volt * siemens / volt
+assert umudu.data_unit == udumu.data_unit == volt * siemens / volt
 assert is_close(umudu.conversion_factor, udumu.conversion_factor)
 assert is_close(umudu.conversion_factor, 1e-15)
 
@@ -38,7 +38,7 @@ assert is_close(amudu.data, 3e-6)
 
 recip = 1 / ms
 assert isinstance(recip, (Unit, PoweredUnit))
-assert recip.base_unit == 1 / second
+assert recip.data_unit == 1 / second
 assert is_close(recip.conversion_factor, 1000)
 
 recip2 = 2 / ms

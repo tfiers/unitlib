@@ -2,7 +2,7 @@ from collections import defaultdict
 from math import prod
 from typing import Dict, Iterable, List, Tuple
 
-from ._01_base_class import BaseUnit, Unit
+from ._01_base_class import DataUnit, Unit
 from ._02_simple_unit import SimpleUnit, dimensionless
 from ._03_powered_unit import PoweredUnit
 
@@ -24,7 +24,7 @@ class CompoundUnit(Unit):
         elif len(combined_units) == 1:
             return combined_units[0]
         else:
-            # `cls` can be `CompoundUnit` or `CompoundBaseUnit`.
+            # `cls` can be `CompoundUnit` or `CompoundDataUnit`.
             compound_unit = object.__new__(cls)
             compound_unit.components = combined_units
             return compound_unit
@@ -34,8 +34,8 @@ class CompoundUnit(Unit):
         return "·".join([component.name for component in self.components])
 
     @property
-    def base_unit(self):
-        return CompoundBaseUnit([component.base_unit for component in self.components])
+    def data_unit(self):
+        return CompoundDataUnit([component.data_unit for component in self.components])
 
     @property
     def conversion_factor(self):
@@ -48,8 +48,8 @@ class CompoundUnit(Unit):
         return self.__class__([component ** power for component in self.components])
 
 
-class CompoundBaseUnit(BaseUnit, CompoundUnit):
-    def __new__(cls, units: Iterable[BaseUnit]):
+class CompoundDataUnit(DataUnit, CompoundUnit):
+    def __new__(cls, units: Iterable[DataUnit]):
         return CompoundUnit.__new__(cls, units)
 
 

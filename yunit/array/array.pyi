@@ -11,14 +11,14 @@ from numpy.lib.mixins import NDArrayOperatorsMixin
 
 from .quantity import Quantity
 from ..type_aliases import ArrayLike
-from ..unit import BaseUnit, Unit
+from ..unit import DataUnit, Unit
 
 def create_new_Array_or_Quantity(numeric_data) -> Either[Quantity, Array]: ...
 
 class Array(NDArrayOperatorsMixin):
 
     data: np.ndarray
-    data_unit: BaseUnit
+    data_unit: DataUnit
     display_unit: Unit
     def __new__(cls, *args, **kwargs) -> Either[Quantity, Array]: ...
     def __init__(

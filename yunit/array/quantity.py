@@ -24,8 +24,8 @@ class Quantity(Array):
         :param display_unit:  Units in which to display the value.
         :param value_is_given_in_display_units:  If True (default), the given `value` is
                     taken to be expressed in `display_unit`s, and is converted to and
-                    stored internally in `display_unit.base_unit`s. If False, `value`
-                    is taken to be already expressed in `display_unit.base_unit`s,
+                    stored internally in `display_unit.data_unit`s. If False, `value`
+                    is taken to be already expressed in `display_unit.data_unit`s,
                     and no conversion is done.
         """
         super().__init__(value, display_unit, value_is_given_in_display_units)
