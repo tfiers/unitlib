@@ -38,33 +38,32 @@ class Unit(ABC):
         How this unit is displayed textually (eg. in print statements or in axis labels
         of data plots). Examples: "min", "mV".
         """
-        ...
+        ...  # For subclasses to implement.
+
+    @abstractproperty
+    def data_scale(self) -> Number:
+        """
+        Factor with which numeric data annotated with this unit is multiplied before
+        being stored in memory.
+
+        For example, if this `unit` is "mV" (with a `data_unit` of "volt") and its
+        `data_scale` is 1E-3, the numeric data underlying the expression `8 * mV` will
+        be stored as `0.008` in memory.
+        """
+        ...  # For subclasses to implement.
 
     @abstractproperty
     def data_unit(self) -> "DataUnit":
         """
-        A scalar multiple or submultiple of this `unit`, such that
-        ```
-        1 * unit == unit.conversion_factor * unit.data_unit
-        ```
+        A scalar multiple or submultiple of this `unit`.
 
-        Numeric data annotated with this `unit` is stored in `data_unit` units. For
-        example, if this `unit` is "mV" and its `data_unit` is "volt" (with a
-        `conversion_factor` of 1E-3), the numeric data underlying the expression `8 * mV`
-        will be stored as `0.008` in memory.
-        """
-        ...
+        Numeric data annotated with this `unit` is stored in `data_unit`s in memory.
+        See `data_scale`.
 
-    @abstractproperty
-    def conversion_factor(self) -> Number:
+        One `unit` equals `data_scale` of its `data_unit`s.
+        E.g. 1 minute = 60 seconds.
         """
-        With what to multiply one `data_unit` to get one of this unit.
-
-        For example, if this unit is "minute", with a data unit of "second",
-        `conversion_factor` is 60.
-        See also `data_unit`.
-        """
-        ...
+        ...  # For subclasses to implement.
 
     #
     #
@@ -93,7 +92,7 @@ class Unit(ABC):
         cls,
         name: str,
         data_unit: Optional["SimpleDataUnit"] = None,
-        conversion_factor: Optional[float] = 1,
+        data_scale: Optional[float] = 1,
     ):
         # Use `Unit`'s constructor as a shorthand to create new
         # `SimpleUnit`s and `SimpleDataUnit`s.
@@ -103,7 +102,7 @@ class Unit(ABC):
         if data_unit is None:
             return SimpleDataUnit(name)
         else:
-            return SimpleUnit(name, data_unit, conversion_factor)
+            return SimpleUnit(name, data_unit, data_scale)
 
     @staticmethod
     def from_prefix(prefix: Prefix, data_unit: "SimpleDataUnit") -> "SimpleUnit":
@@ -112,7 +111,7 @@ class Unit(ABC):
         return SimpleUnit(
             name=f"{prefix.symbol}{data_unit.name}",
             data_unit=data_unit,
-            conversion_factor=prefix.factor,
+            data_scale=prefix.factor,
         )
 
     #
@@ -203,5 +202,5 @@ class DataUnit(Unit, ABC):
         return self
 
     @property
-    def conversion_factor(self):
+    def data_scale(self):
         return 1

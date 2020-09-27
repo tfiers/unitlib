@@ -38,8 +38,8 @@ class CompoundUnit(Unit):
         return CompoundDataUnit([component.data_unit for component in self.components])
 
     @property
-    def conversion_factor(self):
-        return prod([component.conversion_factor for component in self.components])
+    def data_scale(self):
+        return prod([component.data_scale for component in self.components])
 
     def __hash__(self):
         return hash(self.components)

@@ -43,8 +43,8 @@ class PoweredUnit(Unit):
         return self.ground_unit.data_unit ** self.power
 
     @property
-    def conversion_factor(self):
-        return self.ground_unit.conversion_factor ** self.power
+    def data_scale(self):
+        return self.ground_unit.data_scale ** self.power
 
     def __hash__(self):
         return hash((self.ground_unit, self.power))

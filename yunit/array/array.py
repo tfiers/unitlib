@@ -75,7 +75,7 @@ class Array(NDArrayOperatorsMixin):
         if not issubclass(data_as_array.dtype.type, np.number):
             raise TypeError(f'Input data must be numeric. Got "{repr(data_as_array)}"')
         if data_are_given_in_display_units:
-            self.data = data_as_array * display_unit.conversion_factor
+            self.data = data_as_array * display_unit.data_scale
         else:
             self.data = data_as_array
         self.display_unit = display_unit
@@ -86,7 +86,7 @@ class Array(NDArrayOperatorsMixin):
 
     @property
     def data_in_display_units(self) -> np.ndarray:
-        return self.data / self.display_unit.conversion_factor
+        return self.data / self.display_unit.data_scale
 
     dd: np.ndarray = data_in_display_units  # Shorthand
 
@@ -149,7 +149,7 @@ class Array(NDArrayOperatorsMixin):
                     f"Cannot {ufunc.__name__} a `{Unit.__name__}` and a `{self.__class__.__name__}`."
                 )
             other_display_unit = other
-            other_data = other_display_unit.conversion_factor
+            other_data = other_display_unit.data_scale
             #   Treat eg `pF` as if it was `1 * pF`.
         else:  # `other` is purely numeric (scalar or array-like): (8 mV) * 2
             other_data = other
@@ -185,8 +185,8 @@ class Array(NDArrayOperatorsMixin):
             # 1*mV + (3*volt)
             # Copy units from operand with largest units (nV + mV -> mV)
             if (
-                self.display_unit.conversion_factor
-                > other_display_unit.conversion_factor
+                self.display_unit.data_scale
+                > other_display_unit.data_scale
             ):
                 new_display_unit = self.display_unit
             else:

@@ -11,7 +11,7 @@ nV = Unit.from_prefix(nano, volt)
 
 second = Unit("s")
 ms = Unit.from_prefix(milli, second)
-minute = Unit("min", data_unit=second, conversion_factor=60)
+minute = Unit("min", data_unit=second, data_scale=60)
 
 siemens = Unit("S")
 nS = Unit.from_prefix(nano, siemens)
@@ -19,17 +19,17 @@ nS = Unit.from_prefix(nano, siemens)
 
 umu = volt * ms
 assert umu.data_unit == volt * second
-assert numeric_equals(umu.conversion_factor, 0.001)
+assert numeric_equals(umu.data_scale, 0.001)
 
 udu = mV / nS
 assert udu.data_unit == volt / siemens
-assert numeric_equals(udu.conversion_factor, 1e6)
+assert numeric_equals(udu.data_scale, 1e6)
 
 umudu = nV * nS / mV
 udumu = nV * (nS / mV)
 assert umudu.data_unit == udumu.data_unit == volt * siemens / volt == siemens
-assert numeric_equals(umudu.conversion_factor, udumu.conversion_factor)
-assert numeric_equals(umudu.conversion_factor, 1e-15)
+assert numeric_equals(umudu.data_scale, udumu.data_scale)
+assert numeric_equals(umudu.data_scale, 1e-15)
 
 amumu = 3 * mV * mV
 assert numeric_equals(amumu.data, 3e-6)
@@ -39,7 +39,7 @@ assert numeric_equals(amudu.data, 3e-6)
 recip = 1 / ms
 assert isinstance(recip, (Unit, PoweredUnit))
 assert recip.data_unit == 1 / second
-assert numeric_equals(recip.conversion_factor, 1000)
+assert numeric_equals(recip.data_scale, 1000)
 
 recip2 = 2 / ms
 assert isinstance(recip2, Quantity)

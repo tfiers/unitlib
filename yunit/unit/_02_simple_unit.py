@@ -8,7 +8,7 @@ class SimpleUnit(PoweredUnit):
     """
 
     def __new__(
-        cls, name: str, data_unit: "SimpleDataUnit", conversion_factor: float,
+        cls, name: str, data_unit: "SimpleDataUnit", data_scale: float,
     ):
         simple_unit = object.__new__(cls)
         #   `cls` can be `SimpleUnit` or `SimpleDataUnit`.
@@ -24,7 +24,7 @@ class SimpleUnit(PoweredUnit):
         #  or `simple_unit.__dict__["name"] = ..` also doesn't work :) ).
         simple_unit._name = name
         simple_unit._data_unit = data_unit
-        simple_unit._conversion_factor = conversion_factor
+        simple_unit._data_scale = data_scale
         return simple_unit
 
     @property
@@ -36,11 +36,11 @@ class SimpleUnit(PoweredUnit):
         return self._data_unit
 
     @property
-    def conversion_factor(self):
-        return self._conversion_factor
+    def data_scale(self):
+        return self._data_scale
 
     def __hash__(self):
-        return hash((self.name, self.data_unit, self.conversion_factor))
+        return hash((self.name, self.data_unit, self.data_scale))
 
     def _raised_to(self, power):
         return PoweredUnit(self, power)
