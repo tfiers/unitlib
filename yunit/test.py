@@ -1,6 +1,7 @@
 from numpy import allclose as is_close
 
-from yunit import Array, Quantity, Unit, milli, nano
+from yunit import Array, Quantity, Unit
+from yunit.prefixes import milli, nano
 from yunit.unit import PoweredUnit
 
 

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod, abstractproperty
 from numbers import Number
 from typing import Literal, Optional, TYPE_CHECKING, overload
 
-from .prefixes import Prefix
+from ..prefixes import Prefix
 from ..type_aliases import ArrayLike, Scalar, scalar_types
 
 
