@@ -32,19 +32,13 @@ class Quantity(Array):
 
     @property
     def value(self):
-        return self.data.item()
-
-    @property
-    def value_in_display_units(self) -> Scalar:
         return self.data_in_display_units.item()
-
-    vd: Scalar = value_in_display_units  # Shorthand
 
     @property
     def value_unit(self):
-        return self.data_unit
+        return self.display_unit
 
     _DIY_help_text = (
-        "You can get the bare numeric value via `your_quantity.value` "
+        "You can get the bare numeric value via `quantity.value` "
         "and work with it manually."
     )
