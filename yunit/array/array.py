@@ -60,7 +60,7 @@ class Array(NDArrayOperatorsMixin):
         self,
         data,
         display_unit: Unit,
-        data_are_given_in_display_units: bool = True,
+        data_are_given_in_display_units: bool = False,
     ):
         """
         :param data:  Array-like.
