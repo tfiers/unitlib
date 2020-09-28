@@ -4,7 +4,7 @@ import numpy as np
 from numpy.lib.mixins import NDArrayOperatorsMixin
 
 from ..type_aliases import scalar_types
-from ..unit import Unit, dimensionless
+from ..unit import Unit
 
 
 class UnitError(Exception):
@@ -118,99 +118,10 @@ class Array(NDArrayOperatorsMixin):
     # Elementwise operations (+, >, cos, sign, ..)
 
     def __array_ufunc__(self, ufunc: np.ufunc, method: str, *inputs, **ufunc_kwargs):
-        self._check_if_implemented(method, ufunc)
-        other_data, other_display_unit = self._parse_inputs(inputs, ufunc)
-        new_display_unit = self._combine_units(other_display_unit, ufunc)
-        in_place = self._is_in_place(ufunc_kwargs)
-        new_data = self._apply_ufunc(other_data, ufunc, ufunc_kwargs, in_place)
-        return self._create_output(new_data, new_display_unit, in_place)
+        # Delegate implementation to a separate module, to keep this file overview-able.
+        from .array_ufunc import array_ufunc
 
-    def _check_if_implemented(self, method, ufunc):
-        if method != "__call__":
-            # method == "reduce", "accumulate", ...
-            raise NotImplementedError(
-                f'`{self.__class__.__name__}` does not yet support "{method}" ufuncs. '
-                + self._DIY_help_text
-            )
-        if ufunc not in (np.add, np.subtract, np.multiply, np.divide):
-            raise NotImplementedError(
-                f"`{self.__class__.__name__}` does not yet support "
-                f"the NumPy ufunc `{ufunc.__name__}`. {self._DIY_help_text}"
-            )
-
-    def _parse_inputs(self, inputs, ufunc):
-        # - For unary operators (cos, sign, ..), `len(inputs)` is 1.
-        # - For binary operators (+, >, ..), it is 2.
-        # - `input[0] == self`.
-        #   (So we could make `__array_ufunc__` a static method -- as we don't need the
-        #   `self` first argument` -- but NumPy doesn't like that).
-        other = inputs[1]
-        if isinstance(other, Array):  # (8 mV) * (1 pF)
-            other_data = other.data
-            other_display_unit = other.display_unit
-        elif isinstance(other, Unit):  # (8 mV) * pF
-            if ufunc in (np.add, np.subtract):
-                raise UnitError(
-                    f"Cannot {ufunc.__name__} a `{Unit.__name__}` "
-                    f"and a `{self.__class__.__name__}`."
-                )
-            other_display_unit = other
-            other_data = other_display_unit.data_scale
-            #   Treat eg `pF` as if it was `1 * pF`.
-        else:  # `other` is purely numeric (scalar or array-like): (8 mV) * 2
-            other_data = other
-            other_display_unit = dimensionless
-        return other_data, other_display_unit
-
-    def _combine_units(self, other_display_unit: Unit, ufunc: np.ufunc) -> Unit:
-        if ufunc in (np.add, np.subtract):
-            if self.display_unit.data_unit != other_display_unit.data_unit:
-                # 1*mV + (3*nS)
-                raise UnitError(
-                    f"Cannot {ufunc.__name__} incompatible units {self.display_unit} "
-                    f"and {other_display_unit}."
-                )
-            # 1*mV + (3*volt)
-            # Copy units from operand with largest units (nV + mV -> mV)
-            if self.display_unit.data_scale > other_display_unit.data_scale:
-                new_display_unit = self.display_unit
-            else:
-                new_display_unit = other_display_unit
-        elif ufunc == np.multiply:
-            # 1*mV * (3*nS)
-            new_display_unit = self.display_unit * other_display_unit
-        elif ufunc == np.divide:
-            # 1*mV / (3*nS)
-            new_display_unit = self.display_unit / other_display_unit
-        return new_display_unit
-
-    def _is_in_place(self, ufunc_kwargs) -> bool:
-        """
-        Whether this __array_ufunc__ call is an in-place operation such as `array *= 2`.
-        [See `numpy.lib.mixins._inplace_binary_method`, which added the `out` kwarg].
-        """
-        return ufunc_kwargs.get("out") is self
-
-    def _apply_ufunc(self, other_data, ufunc, ufunc_kwargs, in_place) -> np.ndarray:
-        if in_place:
-            ufunc_kwargs.update(out=self.data)
-        return ufunc(self.data, other_data, **ufunc_kwargs)
-        #   `ufunc` will return a pointer to the result even when `out` is given.
-
-    def _create_output(self, new_data, new_display_unit, in_place):
-        if new_display_unit == dimensionless:
-            if new_data.ndim == 0:
-                return new_data.item()
-            else:
-                return new_data
-            # Note that when this was an in-place operation, we will mutate the LHS
-            # variable from an Array to a purely numeric value.
-        elif in_place:
-            self.display_unit = new_display_unit
-            return self
-        else:
-            # Create a new Array or Quantity.
-            return self.__class__(new_data, new_display_unit, False)
+        return array_ufunc(self, ufunc, method, *inputs, **ufunc_kwargs)
 
     #
     #
