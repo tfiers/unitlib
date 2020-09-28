@@ -5,6 +5,7 @@ Implementation of `Array.__array_ufunc__`.
 import numpy as np
 
 from .array import Array, UnitError
+from .quantity import Quantity
 from ..type_aliases import Either, ArrayLike
 from ..unit import Unit, dimensionless
 
@@ -117,4 +118,11 @@ def create_output(
         return self
     else:
         # Create a new Array or Quantity.
-        return self.__class__(new_data, new_display_unit, False)
+        if new_data.size == 1:
+            return Quantity(
+                new_data, new_display_unit, value_is_given_in_display_units=False
+            )
+        else:
+            return Array(
+                new_data, new_display_unit, data_are_given_in_display_units=False
+            )

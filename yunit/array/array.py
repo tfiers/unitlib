@@ -3,27 +3,11 @@
 import numpy as np
 from numpy.lib.mixins import NDArrayOperatorsMixin
 
-from ..type_aliases import scalar_types
 from ..unit import Unit
 
 
 class UnitError(Exception):
     pass
-
-
-def create_new_Array_or_Quantity(numeric_data):
-    """
-    Create either an new `Array` or a new `Quantity`, depending on the dimension of the
-    given data.
-    """
-    from .quantity import Quantity
-
-    if isinstance(numeric_data, scalar_types) or (
-        isinstance(numeric_data, np.ndarray) and numeric_data.ndim == 0
-    ):
-        return object.__new__(Quantity)
-    else:
-        return object.__new__(Array)
 
 
 class Array(NDArrayOperatorsMixin):
@@ -51,11 +35,6 @@ class Array(NDArrayOperatorsMixin):
     data: np.ndarray
     display_unit: Unit
 
-    def __new__(cls, data, *args, **kwargs):
-        # Note that `__new__`'s signature must match that of `__init__` (also in
-        # `Quantity`).
-        return create_new_Array_or_Quantity(data)
-
     def __init__(
         self,
         data,
@@ -65,11 +44,11 @@ class Array(NDArrayOperatorsMixin):
         """
         :param data:  Array-like.
         :param display_unit:  Units in which to display the data.
-        :param data_are_given_in_display_units:  If True (default), the given `data` is
-                    taken to be expressed in `display_unit`s, and is converted to and
-                    stored internally in `display_unit.data_unit`s. If False, `data`
-                    is taken to be already expressed in `display_unit.data_unit`s,
-                    and no conversion is done.
+        :param data_are_given_in_display_units:  If True, the given `data` is taken to
+                    be expressed in `display_unit`s, and is converted to and stored
+                    internally in `display_unit.data_unit`s. If False (default), `data`
+                    is taken to be already expressed in `display_unit.data_unit`s, and
+                    no conversion is done.
         """
         data_as_array = np.asarray(data)
         if not issubclass(data_as_array.dtype.type, np.number):

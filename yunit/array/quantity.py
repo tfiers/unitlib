@@ -1,4 +1,6 @@
-from .array import Array, create_new_Array_or_Quantity
+import numpy as np
+
+from .array import Array
 from ..type_aliases import Scalar
 from ..unit import Unit
 
@@ -9,9 +11,6 @@ class Quantity(Array):
 
     See `Array`.
     """
-
-    def __new__(cls, value, *args, **kwargs):
-        return create_new_Array_or_Quantity(value)
 
     def __init__(
         self,
@@ -28,6 +27,12 @@ class Quantity(Array):
                     is taken to be already expressed in `display_unit.data_unit`s,
                     and no conversion is done.
         """
+        if np.size(value) > 1:
+            raise ValueError(
+                f"`value` must not have more than one element. Got `{value}`."
+            )
+        # We implicitly allow not only scalars, but also any size-1 array, like
+        # `array(3)`, `[3]`, `[[3]]`, etc.
         super().__init__(value, display_unit, value_is_given_in_display_units)
 
     @property
