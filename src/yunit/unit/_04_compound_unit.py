@@ -1,17 +1,17 @@
 from collections import defaultdict
-from math import prod
 from typing import Dict, Iterable, List, Tuple
 
 from ._01_base_class import DataUnit, Unit
 from ._02_simple_unit import SimpleUnit, dimensionless
 from ._03_powered_unit import PoweredUnit
+from ..backwards_compatibility import prod
 
 
 class CompoundUnit(Unit):
     """
     A multiplicative combination of `PoweredUnit`s.
     Eg "mV²·μm / nS".
-    
+
     Attributes:
         - components: Tuple[PoweredUnit]
     """

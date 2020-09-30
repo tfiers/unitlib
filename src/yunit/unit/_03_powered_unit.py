@@ -1,7 +1,5 @@
-from typing import TYPE_CHECKING
-
 from ._01_base_class import DataUnit, Unit
-
+from ..backwards_compatibility import TYPE_CHECKING
 
 if TYPE_CHECKING:
     # See the explanation of `if TYPE_CHECKING` in ../ReadMe.

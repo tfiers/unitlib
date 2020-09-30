@@ -1,10 +1,13 @@
 from numbers import Number
-from typing import Protocol, Sequence, Union
+from typing import Sequence, Union
 
 import numpy as np
 
+from .backwards_compatibility import Protocol
 
-Either = Union
+
+Either = Union  # I prefer this name
+
 
 scalar_types = (Number, np.number)
 Scalar = Either[scalar_types]
