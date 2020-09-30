@@ -21,6 +21,7 @@ setup(
         "Operating System :: OS Independent",
     ],
     packages=find_packages(),
+    install_requires=["numpy"],
     # Get package version from git tags
     setup_requires=["setuptools_scm"],
     use_scm_version={
