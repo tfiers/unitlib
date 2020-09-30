@@ -8,7 +8,10 @@ class SimpleUnit(PoweredUnit):
     """
 
     def __new__(
-        cls, name: str, data_unit: "SimpleDataUnit", data_scale: float,
+        cls,
+        name: str,
+        data_unit: "SimpleDataUnit",
+        data_scale: float,
     ):
         simple_unit = object.__new__(cls)
         #   `cls` can be `SimpleUnit` or `SimpleDataUnit`.
