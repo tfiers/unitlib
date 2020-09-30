@@ -19,7 +19,7 @@ jobs:
           pip install pytest
           pytest
 
-  full-matrix-test:
+  matrix:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
