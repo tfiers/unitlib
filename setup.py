@@ -20,7 +20,8 @@ setup(
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    packages=find_packages(),
+    packages=find_packages('src'),
+    package_dir={'': 'src'},  # "Root package can be found in src dir"
     install_requires=["numpy"],
     # Get package version from git tags
     setup_requires=["setuptools_scm"],
