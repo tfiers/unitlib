@@ -1,3 +1,5 @@
+This ReadMe contains explanations of code appearing in multiple modules.
+
 ## On `if TYPE_CHECKING`
 
 `TYPE_CHECKING` is `False` at runtime (so we don't get circular imports), but the
