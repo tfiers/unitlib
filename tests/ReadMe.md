@@ -5,9 +5,9 @@
     ```
    pip install -e .
    ```
-2. Install test runner:
+2. Install testing requirements, by running, in the `tests/` dir:
    ```
-   pip install pytest
+   pip install -r requirements.txt
    ```
 3. Finally, run
    ```
