@@ -17,6 +17,6 @@ This will get you the
 
 yunit is [tested](.github/workflows/pytest.yml) on Python versions 3.9 down to 3.6, on Windows, Linux and MacOS.
 
-This indicates whether the latest code commit on the main branch passes all tests:
+The following indicates whether the latest code commit on the main branch passes all tests:
 
 ![pytest](https://github.com/tfiers/yunit/workflows/pytest/badge.svg?branch=main)
