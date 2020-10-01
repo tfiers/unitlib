@@ -5,11 +5,14 @@
     ```
    pip install -e .
    ```
-2. Install testing requirements, by running, in the `tests/` dir:
+2. Install the testing requirements:
    ```
-   pip install -r requirements.txt
+   pip install -r tests/requirements.txt
    ```
 3. Finally, run
    ```
    pytest
    ```
+
+These tests are also [run automatically](../.github/workflows/autotest.yml) 
+on every push of Python code to GitHub, on a range of different Python versions and OS'es.

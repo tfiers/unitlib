@@ -1,5 +1,7 @@
-name: pytest
+name: autotest
 
+# Only run tests when a Python file has changed (to avoid eg small markdown edits
+# triggering the full testing machine).
 on:
   push:
     paths: [ '**.py' ]
