@@ -3,6 +3,16 @@
 Physical units for NumPy arrays.\
 Fast • Simple • High voltage
 
+
+## Speed
+
+This package was born out of frustration with other Python unit packages. Existing
+packages work well for toy experiments, but they greatly slow down your code. This
+makes their use unfeasible for even moderate scale scientific simulations.
+
+
+
+
 ## Installation
 
 ```
