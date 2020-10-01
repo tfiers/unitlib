@@ -3,7 +3,7 @@
 import numpy as np
 from numpy.lib.mixins import NDArrayOperatorsMixin
 
-from ..unit import Unit
+from ..old_unit import OldUnitABC
 
 
 class UnitError(Exception):
@@ -33,12 +33,12 @@ class Array(NDArrayOperatorsMixin):
     #
 
     data: np.ndarray
-    display_unit: Unit
+    display_unit: OldUnitABC
 
     def __init__(
         self,
         data,
-        display_unit: Unit,
+        display_unit: OldUnitABC,
         data_are_given_in_display_units: bool = False,
     ):
         """

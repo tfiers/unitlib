@@ -1,7 +1,7 @@
-from ._03_powered_unit import PoweredDataUnit, PoweredUnit
+from ._03_powered_unit import DataUnitCompoment, UnitCompoment
 
 
-class SimpleUnit(PoweredUnit):
+class UnitAtom(UnitCompoment):
     """
     Eg "newton" or "mV"; as contrasted with "mV²" (a `PoweredUnit`) or "newton * meter²"
     (a `CompoundUnit`).
@@ -10,7 +10,7 @@ class SimpleUnit(PoweredUnit):
     def __new__(
         cls,
         name: str,
-        data_unit: "SimpleDataUnit",
+        data_unit: "DataUnitAtom",
         data_scale: float,
     ):
         simple_unit = object.__new__(cls)
@@ -46,18 +46,18 @@ class SimpleUnit(PoweredUnit):
         return hash((self.name, self.data_unit, self.data_scale))
 
     def _raised_to(self, power):
-        return PoweredUnit(self, power)
+        return UnitCompoment(self, power)
 
 
-class SimpleDataUnit(PoweredDataUnit, SimpleUnit):
+class DataUnitAtom(DataUnitCompoment, UnitAtom):
     def __new__(cls, name: str):
-        return SimpleUnit.__new__(cls, name, ..., ...)
+        return UnitAtom.__new__(cls, name, ..., ...)
 
     def __hash__(self):
         return hash(self.name)
 
     def _raised_to(self, power):
-        return PoweredDataUnit(self, power)
+        return DataUnitCompoment(self, power)
 
 
-dimensionless = SimpleDataUnit("1")
+dimensionless = DataUnitAtom("1")

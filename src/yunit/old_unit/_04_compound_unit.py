@@ -1,13 +1,13 @@
 from collections import defaultdict
 from typing import Dict, Iterable, List, Tuple
 
-from ._01_base_class import DataUnit, Unit
-from ._02_simple_unit import SimpleUnit, dimensionless
-from ._03_powered_unit import PoweredUnit
+from ._01_base_class import DataUnit, OldUnitABC
+from ._02_simple_unit import UnitAtom, dimensionless
+from ._03_powered_unit import UnitCompoment
 from ..backwards_compatibility import prod
 
 
-class CompoundUnit(Unit):
+class Unit(OldUnitABC):
     """
     A multiplicative combination of `PoweredUnit`s.
     Eg "mV²·μm / nS".
@@ -16,7 +16,7 @@ class CompoundUnit(Unit):
         - components: Tuple[PoweredUnit]
     """
 
-    def __new__(cls, units: Iterable[Unit]):
+    def __new__(cls, units: Iterable[OldUnitABC]):
         flattened_units = flatten(units)
         combined_units = combine_powers(flattened_units)
         if len(combined_units) == 0:
@@ -35,7 +35,7 @@ class CompoundUnit(Unit):
 
     @property
     def data_unit(self):
-        return CompoundDataUnit([component.data_unit for component in self.components])
+        return DataUnit([component.data_unit for component in self.components])
 
     @property
     def data_scale(self):
@@ -48,28 +48,28 @@ class CompoundUnit(Unit):
         return self.__class__([component ** power for component in self.components])
 
 
-class CompoundDataUnit(DataUnit, CompoundUnit):
+class DataUnit(DataUnit, Unit):
     def __new__(cls, units: Iterable[DataUnit]):
-        return CompoundUnit.__new__(cls, units)
+        return Unit.__new__(cls, units)
 
 
-def flatten(units: Iterable[Unit]) -> List[PoweredUnit]:
+def flatten(units: Iterable[OldUnitABC]) -> List[UnitCompoment]:
     """ Flatten and homogenize input units to be a list of `PoweredUnit`s. """
     flattened_units = []
     for unit in units:
-        if isinstance(unit, CompoundUnit):
+        if isinstance(unit, Unit):
             flattened_units.extend(unit.components)
-        elif isinstance(unit, PoweredUnit):
+        elif isinstance(unit, UnitCompoment):
             flattened_units.append(unit)
     return flattened_units
 
 
-def combine_powers(units: List[PoweredUnit]) -> Tuple[PoweredUnit]:
+def combine_powers(units: List[UnitCompoment]) -> Tuple[UnitCompoment]:
     """
     Aggregate all `PoweredUnit`s that have the same `ground_unit`, and sum their
     powers. Throw away dimensionless units and units with a combined power of zero.
     """
-    powers: Dict[SimpleUnit, int] = defaultdict(lambda: 0)
+    powers: Dict[UnitAtom, int] = defaultdict(lambda: 0)
     for u in units:
         powers[u.ground_unit] += u.power
     return tuple(

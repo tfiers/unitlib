@@ -2,7 +2,7 @@ import numpy as np
 
 from .array import Array
 from ..type_aliases import Scalar
-from ..unit import Unit
+from ..old_unit import OldUnitABC
 
 
 class Quantity(Array):
@@ -15,7 +15,7 @@ class Quantity(Array):
     def __init__(
         self,
         value: Scalar,
-        display_unit: Unit,
+        display_unit: OldUnitABC,
         value_is_given_in_display_units: bool = True,
     ):
         """

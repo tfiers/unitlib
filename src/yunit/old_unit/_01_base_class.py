@@ -8,12 +8,12 @@ from ..backwards_compatibility import Literal, TYPE_CHECKING
 
 if TYPE_CHECKING:
     # See the explanation of `if TYPE_CHECKING` in ../ReadMe.
-    from ..array import Array, Quantity
-    from ._02_simple_unit import SimpleUnit, SimpleDataUnit
-    from ._04_compound_unit import CompoundUnit
+    from ..old_array import Array, Quantity
+    from ._02_simple_unit import UnitAtom, DataUnitAtom
+    from ._04_compound_unit import Unit
 
 
-class Unit(ABC):
+class OldUnitABC(ABC):
     """
     A physical unit. For example, "farad", "μm²", or "mV/nS".
 
@@ -91,24 +91,24 @@ class Unit(ABC):
     def __new__(
         cls,
         name: str,
-        data_unit: Optional["SimpleDataUnit"] = None,
+        data_unit: Optional["DataUnitAtom"] = None,
         data_scale: Optional[float] = 1,
     ):
         # Use `Unit`'s constructor as a shorthand to create new
         # `SimpleUnit`s and `SimpleDataUnit`s.
 
-        from ._02_simple_unit import SimpleUnit, SimpleDataUnit
+        from ._02_simple_unit import UnitAtom, DataUnitAtom
 
         if data_unit is None:
-            return SimpleDataUnit(name)
+            return DataUnitAtom(name)
         else:
-            return SimpleUnit(name, data_unit, data_scale)
+            return UnitAtom(name, data_unit, data_scale)
 
     @staticmethod
-    def from_prefix(prefix: Prefix, data_unit: "SimpleDataUnit") -> "SimpleUnit":
-        from ._02_simple_unit import SimpleUnit
+    def from_prefix(prefix: Prefix, data_unit: "DataUnitAtom") -> "UnitAtom":
+        from ._02_simple_unit import UnitAtom
 
-        return SimpleUnit(
+        return UnitAtom(
             name=f"{prefix.symbol}{data_unit.name}",
             data_unit=data_unit,
             data_scale=prefix.factor,
@@ -120,24 +120,24 @@ class Unit(ABC):
     # Unit composition
 
     # mV * farad
-    def __mul__(self, other) -> "CompoundUnit":
-        from ._04_compound_unit import CompoundUnit
+    def __mul__(self, other) -> "Unit":
+        from ._04_compound_unit import Unit
 
-        if isinstance(other, Unit):
-            return CompoundUnit([self, other])
+        if isinstance(other, OldUnitABC):
+            return Unit([self, other])
         else:
             return NotImplemented  # mV * 3
 
     # mV / farad
     def __truediv__(self, other):
-        if isinstance(other, Unit):
+        if isinstance(other, OldUnitABC):
             return self * (1 / other)
             # `1 / other` will defer to `Unit.__rtruediv__`.
         else:
             return NotImplemented  # mV / 3
 
     # mV ** 2
-    def __pow__(self, power, modulo=None) -> "Unit":
+    def __pow__(self, power, modulo=None) -> "OldUnitABC":
         if modulo is not None:
             return NotImplemented
         elif isinstance(power, int):
@@ -146,7 +146,7 @@ class Unit(ABC):
             raise NotImplementedError("Fractional unit powers are not yet supported.")
 
     @abstractmethod
-    def _raised_to(self, power: int) -> "Unit":
+    def _raised_to(self, power: int) -> "OldUnitABC":
         ...  # For subclasses to implement.
 
     #
@@ -155,6 +155,9 @@ class Unit(ABC):
     # `Quantity` and `Array` creation API
     #
     # ..via `8 * mV` syntax
+
+    def __array_ufunc__(self, *args, **kwargs):
+        ...
 
     @overload
     def __rmul__(self, other: Scalar) -> "Quantity":
@@ -168,7 +171,7 @@ class Unit(ABC):
     def __rmul__(self, other):
         # Why import here? To prevent a circular import (`array.py` already imports from
         # `unit.py` at the module level).
-        from ..array import Array, Quantity
+        from ..old_array import Array, Quantity
 
         if isinstance(other, scalar_types):
             return Quantity(value=other, display_unit=self)
@@ -176,7 +179,7 @@ class Unit(ABC):
             return Array(data=other, display_unit=self)
 
     @overload
-    def __rtruediv__(self, other: Literal[1]) -> "Unit":
+    def __rtruediv__(self, other: Literal[1]) -> "OldUnitABC":
         ...
 
     # 8 / mV  (`other` = 8)
@@ -190,7 +193,7 @@ class Unit(ABC):
             return other * reciprocal_unit
 
 
-class DataUnit(Unit, ABC):
+class DataUnit(OldUnitABC, ABC):
     """
     A `Unit` in which numeric data is stored in memory.
 

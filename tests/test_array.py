@@ -3,7 +3,7 @@ from numpy import allclose as numeric_equals
 
 from yunit import Array, Quantity, Unit
 from yunit.prefixes import milli, nano
-from yunit.unit import PoweredUnit
+from yunit.old_unit import UnitCompoment
 
 volt = Unit("V")
 mV = Unit.from_prefix(milli, volt)
@@ -29,7 +29,7 @@ def test_array_div_unit():
 
 def test_1_over_vs_x_over():
     recip = 1 / ms
-    assert isinstance(recip, (Unit, PoweredUnit))
+    assert isinstance(recip, (Unit, UnitCompoment))
     assert recip.data_unit == 1 / second
     assert numeric_equals(recip.data_scale, 1000)
 

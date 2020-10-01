@@ -7,7 +7,7 @@ import numpy as np
 from .array import Array, UnitError
 from .quantity import Quantity
 from ..type_aliases import Either, ArrayLike
-from ..unit import Unit, dimensionless
+from ..old_unit import OldUnitABC, dimensionless
 
 
 def array_ufunc(
@@ -46,10 +46,10 @@ def parse_inputs(self: Array, inputs, ufunc: np.ufunc):
     if isinstance(other, Array):  # (8 mV) * (1 pF)
         other_data = other.data
         other_display_unit = other.display_unit
-    elif isinstance(other, Unit):  # (8 mV) * pF
+    elif isinstance(other, OldUnitABC):  # (8 mV) * pF
         if ufunc in (np.add, np.subtract):
             raise UnitError(
-                f"Cannot {ufunc.__name__} a `{Unit.__name__}` "
+                f"Cannot {ufunc.__name__} a `{OldUnitABC.__name__}` "
                 f"and a `{self.__class__.__name__}`."
             )
         other_display_unit = other
@@ -61,7 +61,7 @@ def parse_inputs(self: Array, inputs, ufunc: np.ufunc):
     return other_data, other_display_unit
 
 
-def combine_units(self: Array, other_display_unit: Unit, ufunc: np.ufunc) -> Unit:
+def combine_units(self: Array, other_display_unit: OldUnitABC, ufunc: np.ufunc) -> OldUnitABC:
     if ufunc in (np.add, np.subtract):
         if self.display_unit.data_unit != other_display_unit.data_unit:
             # 1*mV + (3*nS)
@@ -104,7 +104,7 @@ def apply_ufunc(
 
 
 def create_output(
-    self: Array, new_data: np.ndarray, new_display_unit: Unit, in_place: bool
+    self: Array, new_data: np.ndarray, new_display_unit: OldUnitABC, in_place: bool
 ):
     if new_display_unit == dimensionless:
         if new_data.ndim == 0:

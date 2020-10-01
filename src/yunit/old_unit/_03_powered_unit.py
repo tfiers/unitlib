@@ -1,12 +1,12 @@
-from ._01_base_class import DataUnit, Unit
+from ._01_base_class import DataUnit, OldUnitABC
 from ..backwards_compatibility import TYPE_CHECKING
 
 if TYPE_CHECKING:
     # See the explanation of `if TYPE_CHECKING` in ../ReadMe.
-    from ._02_simple_unit import SimpleUnit, SimpleDataUnit
+    from ._02_simple_unit import UnitAtom, DataUnitAtom
 
 
-class PoweredUnit(Unit):
+class UnitCompoment(OldUnitABC):
     """
     Eg "mm²"; as contrasted with "mm" (a `SimpleUnit`) or "N/mm²" (a `CompoundUnit`).
 
@@ -15,7 +15,7 @@ class PoweredUnit(Unit):
         - power: int
     """
 
-    def __new__(cls, ground_unit: "SimpleUnit", power: int):
+    def __new__(cls, ground_unit: "UnitAtom", power: int):
 
         if power == 0:
             from ._02_simple_unit import dimensionless
@@ -63,6 +63,6 @@ class PoweredUnit(Unit):
         return "".join(output_chars)
 
 
-class PoweredDataUnit(DataUnit, PoweredUnit):
-    def __new__(cls, ground_unit: "SimpleDataUnit", power: int):
-        return PoweredUnit.__new__(cls, ground_unit, power)
+class DataUnitCompoment(DataUnit, UnitCompoment):
+    def __new__(cls, ground_unit: "DataUnitAtom", power: int):
+        return UnitCompoment.__new__(cls, ground_unit, power)
