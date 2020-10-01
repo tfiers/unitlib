@@ -1,9 +1,9 @@
+import numpy as np
 from numpy import allclose as numeric_equals
 
 from yunit import Array, Quantity, Unit
 from yunit.prefixes import milli, nano
 from yunit.unit import PoweredUnit
-
 
 volt = Unit("V")
 mV = Unit.from_prefix(milli, volt)
@@ -44,12 +44,14 @@ def test_power():
     assert numeric_equals(smup.data, 8e-6)
     assert smup.data_unit == volt ** 2 == volt * volt
 
+
 def test_quantity():
     time = 2 * minute
     assert time.value_unit == time.display_unit == minute
     assert time.data_unit == second
     assert time.value == time.data_in_display_units.item() == 2
     assert time.data.item() == 120
+
 
 def test_array():
     amu = [3, 1, 5] * nV
@@ -61,5 +63,14 @@ def test_quantity_mul():
     assert isinstance(smu, Quantity)
     # assert 2 * smu == smu + smu  # todo: implement ufunc `equal`
 
+
 def test_remove_units():
     assert 1 * ms / ms == 1
+
+
+def test_ndarray():
+    lmu = np.ones(2) * mV
+    assert lmu.display_unit == mV
+    assert numeric_equals(lmu.data, [1e-3, 1e-3])
+    assert numeric_equals(lmu.data_in_display_units, [1, 1])
+    assert str(lmu) == "[1 1] mV"
