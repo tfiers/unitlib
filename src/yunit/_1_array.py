@@ -13,6 +13,23 @@ class Array(np.lib.mixins.NDArrayOperatorsMixin):
     The `display_unit` is only used when interfacting with the user; that is: at Array
     creation time, and when printing or plotting the Array. Internally, the data is
     stored -- and calculations with the data are done -- in `data_unit`s.
+
+    `data_unit` is a scalar multiple or submultiple of `display_unit`. (You can access
+    it through this Array's `data_unit` property, or equivalently, via
+    `display_unit.data_unit`). We could for example have a "mV" display unit with a
+    "volt" data unit. All arrays containing voltage data -- whether their `display_unit`
+    is "mV", "μV", or "kV" -- would have their data stored in volts. (Floating point
+    number representation makes this possible even for very large or small multipliers,
+    like eg attoseconds).
+
+    The advantage of this is that you can push the `data` of different Arrays through a
+    pipeline of speed-optimized functions (like Numba JIT-compiled functions) without
+    the overhead of unit checking and unit conversions. Because all data is in the same
+    relative unit system, there will be no order-of-magnitude unit errors.
+
+    You thus get the best of both worlds:
+    - The convenience of units when inputing and displaying your data.
+    - The processing speed of raw NumPy arrays and Numba JIT-compiled functions.
     """
 
     # See "Writing custom array containers"[1] from the NumPy manual for info on this
