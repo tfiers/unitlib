@@ -1,11 +1,12 @@
 from typing import Optional
 
 import numpy as np
+from numpy.lib.mixins import NDArrayOperatorsMixin
 
 from ._3_unit import Unit, DataUnit
 
 
-class Array(np.lib.mixins.NDArrayOperatorsMixin):
+class Array(NDArrayOperatorsMixin):
     """
     A NumPy array with a physical unit.
 
@@ -33,19 +34,6 @@ class Array(np.lib.mixins.NDArrayOperatorsMixin):
     - The convenience of units when inputing and displaying your data.
     - The processing speed of raw NumPy arrays and Numba JIT-compiled functions.
     """
-
-    # See "Writing custom array containers"[1] from the NumPy manual for info on this
-    # class's `__array_ufunc__` and `__array_function__` methods.
-    #
-    # # [1](https://numpy.org/doc/stable/user/basics.dispatch.html)
-
-    # The base class `NDArrayOperatorsMixin` implements Python dunder methods like
-    # `__mul__` and `__imul__`, so that we can use standard Python syntax like `*` and
-    # `*=` with our `Array`s.
-    #
-    # (`NDArrayOperatorsMixin` implements these by calling the
-    # corresponding NumPy ufuncs [like `np.multiply`], which in turn defer to our
-    # `__array_ufunc__` method).
 
     #
     #
@@ -127,20 +115,29 @@ class Array(np.lib.mixins.NDArrayOperatorsMixin):
     #
     #
     # --------------------------------------------
-    # Elementwise operations (+, >, cos, sign, ..)
+    #
 
+    # See "Writing custom array containers"[1] from the NumPy manual for info on the
+    # below `__array_ufunc__` and `__array_function__` methods.
+    #
+    # # [1](https://numpy.org/doc/stable/user/basics.dispatch.html)
+
+    # The base class `NDArrayOperatorsMixin` implements Python dunder methods like
+    # `__mul__` and `__imul__`, so that we can use standard Python syntax like `*` and
+    # `*=` with our `Array`s.
+    #
+    # (`NDArrayOperatorsMixin` implements these by calling the
+    # corresponding NumPy ufuncs [like `np.multiply`], which in turn defer to our
+    # `__array_ufunc__` method).
+
+    # Elementwise operations (+, >, cos, sign, ..)
     def __array_ufunc__(self, *args, **kwargs):
         # Delegate implementation to a separate module, to keep this file overview-able.
-        from .array_ufunc import array_ufunc
+        from .unit_arithmetic import __array_ufunc__
 
-        return array_ufunc(self, *args, **kwargs)
+        return __array_ufunc__(self, *args, **kwargs)
 
-    #
-    #
-    # ------------------------------
     # NumPy methods (mean, sum, linspace, ...)
-    #
-
     def __array_function__(self, func, _types, _args, _kwargs):
         raise NotImplementedError(
             f"`{self.__class__.__name__}` does not yet support being used "
@@ -151,4 +148,3 @@ class Array(np.lib.mixins.NDArrayOperatorsMixin):
         "You can get the bare numeric data (a plain NumPy array) "
         "via `array.data`, and work with it manually."
     )
-
