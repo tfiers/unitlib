@@ -1,21 +1,146 @@
-from typing import Tuple
+from abc import ABC, abstractproperty, abstractmethod
+from numbers import Number
+from typing import Optional
 
 from ._2_quantity import Quantity
-from ._4_unit_component import UnitComponent
+from .backwards_compatibility import TYPE_CHECKING
+from .prefixes import Prefix
+
+if TYPE_CHECKING:
+    from ._6_unit_atom import UnitAtom, DataUnitAtom
 
 
-class Unit(Quantity):
+class Unit(Quantity, ABC):
+    """
+    A physical unit. For example, "farad", "μm²", or "mV/nS".
 
-    components: Tuple[UnitComponent]
+    Units can be:
+     - raised to a power (`meter**2`);
+     - composed with other units (`newton * meter`);
+     - applied to numeric data (`8*farad`, `[3,5]*mV`);
+    """
+
+    #
+    #
+    # ---------------
+    # Core properties
+
+    @abstractproperty
+    def name(self) -> str:
+        """
+        How this unit is displayed textually (eg. in print statements or in axis labels
+        of data plots). Examples: "min", "mV".
+        """
+        ...  # For subclasses to implement.
+
+    @abstractproperty
+    def scale(self) -> Number:
+        """
+        Factor with which numeric data annotated with this unit is multiplied before
+        being stored in memory.
+
+        For example, if this `unit` is "mV" (with a `data_unit` of "volt") and its
+        `scale` is 1E-3, the numeric data underlying the expression `8 * mV` will
+        be stored as `0.008` in memory.
+        """
+        ...  # For subclasses to implement.
+
+    @abstractproperty
+    def data_unit(self) -> "DataUnit":
+        """
+        A scalar multiple or submultiple of this `unit`.
+
+        Numeric data annotated with this `unit` is stored in `data_unit`s in memory.
+        See `scale`.
+
+        One `unit` equals "`scale`" of its `data_unit`s.
+        E.g. 1 minute = 60 seconds.
+        """
+        ...  # For subclasses to implement.
+
+    #
+    #
+    # --------------------------------
+    # Behave as a proper Python object
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return f'<{self.__class__.__name__} "{self.name}">'
+
+    def __eq__(self, other):
+        return hash(self) == hash(other)
+
+    @abstractmethod
+    def __hash__(self) -> int:
+        ...  # For subclasses to implement.
+
+    #
+    #
+    # -------------------
+    # Unit exponentiation
+
+    @abstractmethod
+    def _raised_to(self, power: int) -> "Unit":
+        ...  # For subclasses to implement.
+
+    #
+    #
+    # -----------------
+    # Unit creation API
+
+    def __new__(
+        cls,
+        name: str,
+        data_unit: Optional["DataUnitAtom"] = None,
+        scale: Optional[float] = 1,
+    ):
+        # Use `Unit`'s constructor as a shorthand to create new
+        # `UnitAtom`s and `DataUnitAtom`s.
+
+        from ._6_unit_atom import UnitAtom, DataUnitAtom
+
+        if data_unit:
+            return UnitAtom(name, data_unit, scale)
+        else:
+            return DataUnitAtom(name)
+
+    @staticmethod
+    def from_prefix(prefix: Prefix, data_unit: "DataUnitAtom") -> "UnitAtom":
+        from ._6_unit_atom import UnitAtom
+
+        return UnitAtom(
+            name=f"{prefix.symbol}{data_unit.name}",
+            data_unit=data_unit,
+            data_scale=prefix.factor,
+        )
+
+    #
+    #
+    # -------------------------------------------
+    # Substitutability with `Quantity` base class
 
     @property
-    def scale(self) -> float:
-        return self.data.item()
+    def data(self):
+        return self.scale
 
     @property
-    def data_unit(self) -> 'DataUnit':
-        return DataUnit([])
+    def display_unit(self):
+        return self
 
 
-class DataUnit(Unit):
-    ...
+class DataUnit(Unit, ABC):
+    """
+    A `Unit` in which numeric data is stored in memory.
+
+    See the `Unit.data_unit` property.
+    """
+
+    @property
+    def data_unit(self):
+        return self
+
+    @property
+    def scale(self):
+        return 1
