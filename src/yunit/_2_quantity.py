@@ -38,7 +38,8 @@ class Quantity(Array):
             )
         # We implicitly allow not only scalars, but also any size-1 array, like
         # `array(3)`, `[3]`, `[[3]]`, etc.
-        super().__init__(
+        Array.__init__(
+            self,
             value,
             display_unit,
             name,
