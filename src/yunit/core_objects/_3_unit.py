@@ -18,6 +18,16 @@ class Unit(Quantity, ABC):
      - raised to a power (`meter**2`);
      - composed with other units (`newton * meter`);
      - applied to numeric data (`8*farad`, `[3,5]*mV`);
+
+    This abstract base class (`ABC`) defines the interface and functionality common to
+    all `Unit` subclasses:
+     - `UnitAtom`,
+     - `PoweredUnitAtom`, and
+     - `CompoundUnit`;
+    and their `DataUnit` counterparts:
+     - `DataUnitAtom`,
+     - `PoweredDataUnitAtom`, and
+     - `CompoundDataUnit`.
     """
 
     #
