@@ -1,3 +1,7 @@
+"""
+Support Python 3.6 and 3.7
+"""
+
 import sys
 from typing import Iterable
 
@@ -8,8 +12,7 @@ if sys.version_info >= (3, 8):
     from typing import Protocol, Literal, TYPE_CHECKING
     from math import prod
 
-else:  # Support Python 3.6 and 3.7
-
+else:
     # Backports of new objects from `typing`.
     from typing_extensions import Protocol, Literal, TYPE_CHECKING
 
