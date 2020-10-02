@@ -3,8 +3,8 @@ from numbers import Number
 from typing import Optional
 
 from ._2_quantity import Quantity
-from .backwards_compatibility import TYPE_CHECKING
-from .prefixes import Prefix
+from yunit.backwards_compatibility import TYPE_CHECKING
+from yunit.prefixes import Prefix
 
 if TYPE_CHECKING:
     from ._6_unit_atom import UnitAtom, DataUnitAtom

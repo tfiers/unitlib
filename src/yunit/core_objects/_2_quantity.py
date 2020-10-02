@@ -4,7 +4,7 @@ import numpy as np
 
 from ._1_array import Array
 from ._3_unit import Unit
-from .type_aliases import Scalar
+from yunit.type_aliases import Scalar
 
 
 class Quantity(Array):

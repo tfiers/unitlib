@@ -5,7 +5,7 @@ from typing import Iterable, Dict
 from ._3_unit import DataUnit, Unit
 from ._5_powered_unit_atom import PoweredUnitAtom
 from ._6_unit_atom import UnitAtom, dimensionless
-from .backwards_compatibility import prod
+from yunit.backwards_compatibility import prod
 
 
 class CompoundUnit(Unit):
