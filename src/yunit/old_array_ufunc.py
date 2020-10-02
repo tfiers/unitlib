@@ -4,10 +4,10 @@ Implementation of `Array.__array_ufunc__`.
 
 import numpy as np
 
-from .array import Array, UnitError
-from .quantity import Quantity
-from ..type_aliases import Either, ArrayLike
-from ..old_unit import OldUnitABC, dimensionless
+from yunit.old_array.array import Array, UnitError
+from yunit.old_array.quantity import Quantity
+from yunit.type_aliases import Either, ArrayLike
+from yunit.old_unit import OldUnitABC, dimensionless
 
 
 def array_ufunc(
