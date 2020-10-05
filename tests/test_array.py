@@ -2,18 +2,18 @@ import numpy as np
 from numpy import allclose as numeric_equals
 
 from yunit import Array, Quantity, Unit
+from yunit.core_objects._5_powered_unit_atom import PoweredUnitAtom
 from yunit.prefixes import milli, nano
-from yunit.old_unit import UnitCompoment
 
-volt = Unit("V")
+volt = Unit.define("V")
 mV = Unit.from_prefix(milli, volt)
 nV = Unit.from_prefix(nano, volt)
 
-second = Unit("s")
+second = Unit.define("s")
 ms = Unit.from_prefix(milli, second)
-minute = Unit("min", data_unit=second, data_scale=60)
+minute = Unit.define("min", data_unit=second, data_scale=60)
 
-siemens = Unit("S")
+siemens = Unit.define("S")
 nS = Unit.from_prefix(nano, siemens)
 
 
@@ -29,7 +29,8 @@ def test_array_div_unit():
 
 def test_1_over_vs_x_over():
     recip = 1 / ms
-    assert isinstance(recip, (Unit, UnitCompoment))
+    assert isinstance(recip, (Unit, PoweredUnitAtom))
+    assert recip.power == -1
     assert recip.data_unit == 1 / second
     assert numeric_equals(recip.data_scale, 1000)
 

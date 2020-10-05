@@ -4,15 +4,15 @@ from yunit import Unit
 from yunit.prefixes import milli, nano
 
 
-volt = Unit("V")
+volt = Unit.define("V")
 mV = Unit.from_prefix(milli, volt)
 nV = Unit.from_prefix(nano, volt)
 
-second = Unit("s")
+second = Unit.define("s")
 ms = Unit.from_prefix(milli, second)
-minute = Unit("min", data_unit=second, data_scale=60)
+minute = Unit.define("min", data_unit=second, data_scale=60)
 
-siemens = Unit("S")
+siemens = Unit.define("S")
 nS = Unit.from_prefix(nano, siemens)
 
 

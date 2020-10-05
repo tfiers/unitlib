@@ -100,22 +100,18 @@ class Unit(Quantity, ABC):
     # -----------------
     # Unit creation API
 
-    def __new__(
-        cls,
+    @staticmethod
+    def define(
         name: str,
         data_unit: Optional["DataUnitAtom"] = None,
         scale: Optional[float] = 1,
     ):
-        # Use `Unit`'s constructor as a shorthand to create new
-        # `UnitAtom`s and `DataUnitAtom`s.
-
         from ._6_unit_atom import UnitAtom, DataUnitAtom
 
         if data_unit:
             return UnitAtom(name, data_unit, scale)
         else:
             return DataUnitAtom(name)
-
 
     @staticmethod
     def from_prefix(prefix: Prefix, data_unit: "DataUnitAtom") -> "UnitAtom":
@@ -145,7 +141,6 @@ class Unit(Quantity, ABC):
         "bare numeric values (plain NumPy arrays or Python scalars) "
         "via `array.data` or `quantity.value`, and work with them manually."
     )
-
 
 
 class DataUnit(Unit, ABC):
