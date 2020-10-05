@@ -3,7 +3,10 @@ from typing import Optional
 import numpy as np
 from numpy.lib.mixins import NDArrayOperatorsMixin
 
-from ._3_unit import Unit, DataUnit
+from ..backwards_compatibility import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ._3_unit import Unit, DataUnit
 
 
 class Array(NDArrayOperatorsMixin):
@@ -41,11 +44,11 @@ class Array(NDArrayOperatorsMixin):
     # Core properties
 
     data: np.ndarray
-    display_unit: Unit
+    display_unit: "Unit"
     name: Optional[str]
 
     @property
-    def data_unit(self) -> DataUnit:
+    def data_unit(self) -> "DataUnit":
         return self.display_unit.data_unit
 
     @property
@@ -63,7 +66,7 @@ class Array(NDArrayOperatorsMixin):
     def __init__(
         self,
         data,
-        display_unit: Unit,
+        display_unit: "Unit",
         name: Optional[str] = None,
         data_are_given_in_display_units: bool = False,
     ):

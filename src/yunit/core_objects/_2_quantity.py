@@ -3,8 +3,11 @@ from typing import Optional
 import numpy as np
 
 from ._1_array import Array
-from ._3_unit import Unit
-from yunit.type_aliases import Scalar
+from ..type_aliases import Scalar
+from ..backwards_compatibility import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ._3_unit import Unit
 
 
 class Quantity(Array):
@@ -18,7 +21,7 @@ class Quantity(Array):
     def __init__(
         self,
         value: Scalar,
-        display_unit: Unit,
+        display_unit: "Unit",
         name: Optional[str] = None,
         value_is_given_in_display_units: bool = True,
     ):

@@ -1,6 +1,9 @@
 from ._3_unit import DataUnit
 from ._4_compound_unit import CompoundUnit
-from ._6_unit_atom import UnitAtom, DataUnitAtom
+from ..backwards_compatibility import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ._6_unit_atom import UnitAtom, DataUnitAtom
 
 
 class PoweredUnitAtom(CompoundUnit):
@@ -12,7 +15,7 @@ class PoweredUnitAtom(CompoundUnit):
         - power: int
     """
 
-    def __init__(self, unit_atom: UnitAtom, power: int):
+    def __init__(self, unit_atom: "UnitAtom", power: int):
         CompoundUnit.__init__(self, components=[self])
         self.unit_atom = unit_atom
         self.power = power
@@ -49,5 +52,5 @@ class PoweredUnitAtom(CompoundUnit):
 
 
 class PoweredDataUnitAtom(DataUnit, PoweredUnitAtom):
-    def __init__(self, unit_atom: DataUnitAtom, power: int):
+    def __init__(self, unit_atom: "DataUnitAtom", power: int):
         PoweredUnitAtom.__init__(self, unit_atom, power)

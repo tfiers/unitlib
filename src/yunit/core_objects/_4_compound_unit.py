@@ -3,9 +3,10 @@ from itertools import chain
 from typing import Iterable, Dict
 
 from ._3_unit import DataUnit, Unit
-from ._5_powered_unit_atom import PoweredUnitAtom
-from ._6_unit_atom import UnitAtom, dimensionless
-from yunit.backwards_compatibility import prod
+from ..backwards_compatibility import prod, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ._5_powered_unit_atom import PoweredUnitAtom
 
 
 class CompoundUnit(Unit):
@@ -24,13 +25,15 @@ class CompoundUnit(Unit):
 
     @staticmethod
     def _squeeze_components(
-        components: Iterable[PoweredUnitAtom],
-    ) -> Iterable[PoweredUnitAtom]:
+        components: Iterable["PoweredUnitAtom"],
+    ) -> Iterable["PoweredUnitAtom"]:
         """
         Aggregate all `PoweredUnitAtom`s that have the same `unit_atom`, and sum their
         powers. Throw away dimensionless components and components with a combined power
         of zero.
         """
+        from ._6_unit_atom import UnitAtom, dimensionless
+
         combined_powers: Dict[UnitAtom, int] = defaultdict(lambda: 0)
         for component in components:
             combined_powers[component.unit_atom] += component.power
