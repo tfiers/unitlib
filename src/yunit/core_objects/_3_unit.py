@@ -116,6 +116,7 @@ class Unit(Quantity, ABC):
         else:
             return DataUnitAtom(name)
 
+
     @staticmethod
     def from_prefix(prefix: Prefix, data_unit: "DataUnitAtom") -> "UnitAtom":
         from ._6_unit_atom import UnitAtom
@@ -138,6 +139,13 @@ class Unit(Quantity, ABC):
     @property
     def display_unit(self):
         return self
+
+    _DIY_help_text = (
+        "If you're working with yunit Arrays or Quantities, you can get their "
+        "bare numeric values (plain NumPy arrays or Python scalars) "
+        "via `array.data` or `quantity.value`, and work with them manually."
+    )
+
 
 
 class DataUnit(Unit, ABC):
