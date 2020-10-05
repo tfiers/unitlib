@@ -55,8 +55,19 @@ class Array(NDArrayOperatorsMixin):
     def data_in_display_units(self) -> np.ndarray:
         return self.data / self.display_unit.scale
 
-    # Shorthand
+    #
+    # Shorthands
+
     dd: np.ndarray = data_in_display_units
+
+    @property
+    def unit(self):
+        ''' A shorthand for `display_unit`. '''
+        return self.display_unit
+
+    @unit.setter
+    def unit(self, value):
+        self.display_unit = value
 
     #
     #
@@ -136,7 +147,7 @@ class Array(NDArrayOperatorsMixin):
     # Elementwise operations (+, >, cos, sign, ..)
     def __array_ufunc__(self, *args, **kwargs):
         # Delegate implementation to a separate module, to keep this file overview-able.
-        from .unit_arithmetic import __array_ufunc__
+        from .ufunc import __array_ufunc__
 
         return __array_ufunc__(self, *args, **kwargs)
 
