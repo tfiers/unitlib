@@ -24,4 +24,11 @@ else:
 #  - Not complain about unused imports
 #  - In other modules, suggest importing these objects from this module instead of from
 #    their original packages.
-Protocol, Literal, TYPE_CHECKING, prod = Protocol, Literal, TYPE_CHECKING, prod
+Protocol, Literal, TYPE_CHECKING = Protocol, Literal, TYPE_CHECKING
+prod = prod
+
+# `TYPE_CHECKING` is `False` at runtime, but `True` for the IDE (PyCharm eg). This means
+# that we can put import statements that would cause circular import errors within an
+# `if TYPE_CHECKING` block, and avoid such errors, while still having the IDE resolve
+# type annotations.
+# See [PEP 563](https://www.python.org/dev/peps/pep-0563/#runtime-annotation-resolution-and-type-checking).
