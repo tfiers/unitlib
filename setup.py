@@ -23,15 +23,21 @@ setup(
     packages=find_packages("src"),
     package_dir={"": "src"},  # This means: "Root package can be found in src dir"
     python_requires=">= 3.6",
+    #   Why this minimum Python version?
     #   `typing-extensions` (see below) does not provide a backport for
-    #   `typing.Protocol` (which we use in `type_aliases.py`) for Python 3.5 . Hence
-    #   this minimum Python version.
+    #   `typing.Protocol` (which we use in `type_aliases.py`) for Python 3.5.
     install_requires=(
-        "numpy",
-        "typing-extensions; python_version < '3.8'",
-        #   This provides backports of `typing.Literal` etc, which are not in the
-        #   standard library until Python 3.8.
+        "numpy >= 1.17",
+        #   `__array_function__` (which we use in `Array`) is introduced in NumPy 1.16,
+        #   and enabled without the need for setting a special env var in NumPy 1.17.
+        #
+        # Requirements for older Python versions only:
+        #
         "dataclasses; python_version < '3.7'",
+        #   `dataclasses` became part of the standard library in Python 3.7 only.
+        "typing-extensions; python_version < '3.8'",
+        #   Provides backports of eg `TYPE_CHECKING`, which was not part of the `typing`
+        #   module until Python 3.8.
     ),
     # Get package version from git tags
     setup_requires=["setuptools_scm"],
