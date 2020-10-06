@@ -6,11 +6,8 @@ import numpy as np
 from .backwards_compatibility import Protocol
 
 
-Either = Union  # I prefer this name
-
-
 scalar_types = (Number, np.number)
-Scalar = Either[scalar_types]
+Scalar = Union[scalar_types]
 
 
 #
@@ -25,4 +22,4 @@ class ProvidesConversionToArray(Protocol):
         ...
 
 
-ArrayLike = Either[Sequence, ProvidesConversionToArray, Scalar]
+ArrayLike = Union[Sequence, ProvidesConversionToArray, Scalar]
