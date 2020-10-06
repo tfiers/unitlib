@@ -3,8 +3,8 @@ from numbers import Number
 from typing import Optional
 
 from ._5_quantity import Quantity
-from yunit.backwards_compatibility import TYPE_CHECKING
-from yunit.prefixes import Prefix
+from ..backwards_compatibility import TYPE_CHECKING
+from ..prefixes import Prefix
 
 if TYPE_CHECKING:
     from ._1_unit_atom import UnitAtom, DataUnitAtom
@@ -79,11 +79,9 @@ class Unit(Quantity, ABC):
     def __repr__(self):
         return f'<{self.__class__.__name__} "{self.name}">'
 
-    def __eq__(self, other):
-        return hash(self) == hash(other)
-
     @abstractmethod
     def __hash__(self) -> int:
+        """ Used for unit (in)equality checks. """
         ...  # For subclasses to implement.
 
     #
