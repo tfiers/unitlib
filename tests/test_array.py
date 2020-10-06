@@ -2,7 +2,7 @@ import numpy as np
 from numpy import allclose as numeric_equals
 
 from yunit import Array, Quantity, Unit
-from yunit.core_objects._5_powered_unit_atom import PoweredUnitAtom
+from yunit.core_objects._2_powered_unit_atom import PoweredUnitAtom
 from yunit.prefixes import milli, nano
 
 volt = Unit.define("V")
@@ -75,3 +75,12 @@ def test_ndarray():
     assert numeric_equals(lmu.data, [1e-3, 1e-3])
     assert numeric_equals(lmu.data_in_display_units, [1, 1])
     assert str(lmu) == "[1 1] mV"
+
+
+def test_neg():
+    a = 8 * mV
+    assert np.negative(a) == -a == 0 * mV - a
+
+def test_raise_to_array():
+    a = 8 * mV
+    a ** [2, 3]

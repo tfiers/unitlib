@@ -1,9 +1,9 @@
-from ._3_unit import DataUnit
-from ._4_compound_unit import CompoundUnit
+from ._4_unit import DataUnit
+from ._3_compound_unit import CompoundUnit
 from ..backwards_compatibility import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ._6_unit_atom import UnitAtom, DataUnitAtom
+    from ._1_unit_atom import UnitAtom, DataUnitAtom
 
 
 class PoweredUnitAtom(CompoundUnit):

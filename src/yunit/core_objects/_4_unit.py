@@ -2,12 +2,12 @@ from abc import ABC, abstractproperty, abstractmethod
 from numbers import Number
 from typing import Optional
 
-from ._2_quantity import Quantity
+from ._5_quantity import Quantity
 from yunit.backwards_compatibility import TYPE_CHECKING
 from yunit.prefixes import Prefix
 
 if TYPE_CHECKING:
-    from ._6_unit_atom import UnitAtom, DataUnitAtom
+    from ._1_unit_atom import UnitAtom, DataUnitAtom
 
 
 class Unit(Quantity, ABC):
@@ -106,7 +106,7 @@ class Unit(Quantity, ABC):
         data_unit: Optional["DataUnitAtom"] = None,
         scale: Optional[float] = 1,
     ):
-        from ._6_unit_atom import UnitAtom, DataUnitAtom
+        from ._1_unit_atom import UnitAtom, DataUnitAtom
 
         if data_unit:
             return UnitAtom(name, data_unit, scale)
@@ -115,7 +115,7 @@ class Unit(Quantity, ABC):
 
     @staticmethod
     def from_prefix(prefix: Prefix, data_unit: "DataUnitAtom") -> "UnitAtom":
-        from ._6_unit_atom import UnitAtom
+        from ._1_unit_atom import UnitAtom
 
         return UnitAtom(
             name=f"{prefix.symbol}{data_unit.name}",
