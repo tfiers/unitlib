@@ -3,13 +3,12 @@
 
 name: autotest
 
-# Only run tests when a Python file has changed (to avoid eg small markdown edits
-# triggering the full testing machine).
+# Avoid markdown edits triggering the testing machine.
 on:
   push:
-    paths: [ '**.py' ]
+    paths-ignore: [ '**.md' ]
   pull_request:
-    paths: [ '**.py' ]
+    paths-ignore: [ '**.md' ]
 
 jobs:
   pytest:
