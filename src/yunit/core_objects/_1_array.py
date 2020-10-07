@@ -6,7 +6,7 @@ from numpy.lib.mixins import NDArrayOperatorsMixin
 from ..backwards_compatibility import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ._4_unit import Unit, DataUnit
+    from ._3_unit import Unit, DataUnit
 
 
 class Array(NDArrayOperatorsMixin):

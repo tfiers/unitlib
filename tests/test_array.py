@@ -2,7 +2,7 @@ import numpy as np
 from numpy import allclose as numeric_equals
 
 from yunit import Array, Quantity, Unit
-from yunit.core_objects._2_powered_unit_atom import PoweredUnitAtom
+from yunit.core_objects.unit_internals import PoweredUnitAtom
 from yunit.prefixes import milli, nano
 
 volt = Unit.define("V")
@@ -32,7 +32,7 @@ def test_1_over_vs_x_over():
     assert isinstance(recip, (Unit, PoweredUnitAtom))
     assert recip.power == -1
     assert recip.data_unit == 1 / second
-    assert numeric_equals(recip.data_scale, 1000)
+    assert numeric_equals(recip.scale, 1000)
 
     recip2 = 2 / ms
     assert isinstance(recip2, Quantity)

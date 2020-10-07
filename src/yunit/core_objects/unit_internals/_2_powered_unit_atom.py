@@ -1,6 +1,6 @@
-from ._4_unit import DataUnit
 from ._3_compound_unit import CompoundUnit
-from ..backwards_compatibility import TYPE_CHECKING
+from .._3_unit import DataUnit, dimensionless
+from ...backwards_compatibility import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ._1_unit_atom import UnitAtom, DataUnitAtom
@@ -18,15 +18,10 @@ class PoweredUnitAtom(CompoundUnit):
     unit_atom: UnitAtom
 
     def __new__(cls, unit_atom: "UnitAtom", power: int):
-
-        from ._1_unit_atom import dimensionless
-
         if power == 0:
             return dimensionless
-
         elif power == 1:
             return unit_atom
-
         else:
             return object.__new__(cls)
             #   `cls` can be `PoweredUnitAtom` or `PoweredDataUnitAtom`.
@@ -68,6 +63,5 @@ class PoweredUnitAtom(CompoundUnit):
 
 
 class PoweredDataUnitAtom(DataUnit, PoweredUnitAtom):
-
     def __new__(cls, unit_atom: "DataUnitAtom", power: int):
         return PoweredUnitAtom.__new__(cls, unit_atom, power)

@@ -2,12 +2,12 @@ from abc import ABC, abstractproperty, abstractmethod
 from numbers import Number
 from typing import Optional
 
-from ._5_quantity import Quantity
+from ._2_quantity import Quantity
 from ..backwards_compatibility import TYPE_CHECKING
 from ..prefixes import Prefix
 
 if TYPE_CHECKING:
-    from ._1_unit_atom import UnitAtom, DataUnitAtom
+    from .unit_internals import UnitAtom, DataUnitAtom
 
 
 class Unit(Quantity, ABC):
@@ -17,17 +17,13 @@ class Unit(Quantity, ABC):
     Units can be:
      - raised to a power (`meter**2`);
      - composed with other units (`newton * meter`);
-     - applied to numeric data (`8*farad`, `[3,5]*mV`);
+     - applied to numeric data (`8 * farad`, `[3,5] * mV`);
 
     This abstract base class (`ABC`) defines the interface and functionality common to
     all `Unit` subclasses:
-     - `UnitAtom`,
-     - `PoweredUnitAtom`, and
-     - `CompoundUnit`;
-    and their `DataUnit` counterparts:
-     - `DataUnitAtom`,
-     - `PoweredDataUnitAtom`, and
-     - `CompoundDataUnit`.
+        - `UnitAtom` and `DataUnitAtom`
+        - `PoweredUnitAtom` and `PoweredDataUnitAtom`
+        - `CompoundUnit` and `CompoundDataUnit`.
     """
 
     #
@@ -104,7 +100,7 @@ class Unit(Quantity, ABC):
         data_unit: Optional["DataUnitAtom"] = None,
         scale: Optional[float] = 1,
     ):
-        from ._1_unit_atom import UnitAtom, DataUnitAtom
+        from .unit_internals import UnitAtom, DataUnitAtom
 
         if data_unit:
             return UnitAtom(name, data_unit, scale)
@@ -113,7 +109,7 @@ class Unit(Quantity, ABC):
 
     @staticmethod
     def from_prefix(prefix: Prefix, data_unit: "DataUnitAtom") -> "UnitAtom":
-        from ._1_unit_atom import UnitAtom
+        from .unit_internals import UnitAtom
 
         return UnitAtom(
             name=f"{prefix.symbol}{data_unit.name}",
@@ -155,3 +151,6 @@ class DataUnit(Unit, ABC):
     @property
     def scale(self):
         return 1
+
+
+dimensionless = Unit.define("")

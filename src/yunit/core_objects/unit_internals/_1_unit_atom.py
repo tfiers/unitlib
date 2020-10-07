@@ -1,5 +1,5 @@
-from ._4_unit import DataUnit
 from ._2_powered_unit_atom import PoweredUnitAtom, PoweredDataUnitAtom
+from .._3_unit import DataUnit
 
 
 class UnitAtom(PoweredUnitAtom):
@@ -56,6 +56,3 @@ class DataUnitAtom(DataUnit, UnitAtom):
 
     def _raised_to(self, power):
         return PoweredDataUnitAtom(unit_atom=self, power=power)
-
-
-dimensionless = DataUnitAtom("")

@@ -11,7 +11,7 @@ from typing import Union, Tuple
 import numpy as np
 
 from . import Array, Unit, dimensionless, Quantity
-from ._3_compound_unit import CompoundUnit
+from .unit_internals import CompoundUnit
 from ..type_aliases import NDArrayLike
 
 equality_comparators = (np.equal, np.not_equal)

@@ -2,8 +2,8 @@ from collections import defaultdict
 from itertools import chain
 from typing import Iterable, Dict, Tuple
 
-from ._4_unit import DataUnit, Unit
-from ..backwards_compatibility import prod, TYPE_CHECKING
+from .._3_unit import DataUnit, Unit, dimensionless
+from ...backwards_compatibility import prod, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ._2_powered_unit_atom import PoweredUnitAtom, PoweredDataUnitAtom
@@ -24,7 +24,7 @@ class CompoundUnit(Unit):
     @classmethod
     def squeeze(cls, units: Iterable["CompoundUnit"]) -> Unit:
 
-        from ._1_unit_atom import dimensionless, UnitAtom
+        from ._1_unit_atom import UnitAtom
 
         flattened_units = chain(*unit.components for unit in units)
 
