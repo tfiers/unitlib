@@ -92,7 +92,7 @@ def __array_ufunc__(
     # Process numeric data
     # --------------------
 
-    is_in_place = ufunc_kwargs.get("out") == self
+    is_in_place = ufunc_kwargs.get("out") is self
     #      Whether this __array_ufunc__ call is an in-place operation such as
     #      `array *= 2`. See `numpy.lib.mixins._inplace_binary_method`, which added the
     #      `out=self` kwarg.
