@@ -56,3 +56,6 @@ class DataUnitAtom(DataUnit, UnitAtom):
 
     def _raised_to(self, power):
         return PoweredDataUnitAtom(unit_atom=self, power=power)
+
+
+dimensionless = DataUnitAtom("")

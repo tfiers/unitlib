@@ -151,6 +151,3 @@ class DataUnit(Unit, ABC):
     @property
     def scale(self):
         return 1
-
-
-dimensionless = Unit.define("")

@@ -2,7 +2,7 @@ from collections import defaultdict
 from itertools import chain
 from typing import Iterable, Dict, Tuple
 
-from .._3_unit import DataUnit, Unit, dimensionless
+from .._3_unit import DataUnit, Unit
 from ...backwards_compatibility import prod, TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -18,13 +18,13 @@ class CompoundUnit(Unit):
         components: Tuple[PoweredUnitAtom, ...]
     """
 
-    def __init__(self, components: Tuple[PoweredUnitAtom, ...]):
+    def __init__(self, components: Tuple["PoweredUnitAtom", ...]):
         self.components = components
 
     @classmethod
     def squeeze(cls, units: Iterable["CompoundUnit"]) -> Unit:
 
-        from ._1_unit_atom import UnitAtom
+        from ._1_unit_atom import UnitAtom, dimensionless
 
         flattened_units = chain(*(unit.components for unit in units))
 
