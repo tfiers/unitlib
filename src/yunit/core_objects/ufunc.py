@@ -72,9 +72,12 @@ def __array_ufunc__(
     #   (`8 mV *= 3`, __imul__), `inputs[0] == self`
     # - For reflected operations (`3 * 8 mV`, __rmul__), `inputs[1] == self`.
 
+    left_operand, right_operand = inputs
+
     def as_array(operand: Union[Array, NDArrayLike]) -> Array:
         if not isinstance(operand, Array):
-            # `operand` is purely numeric (scalar or array-like). Eg: (8 mV) * 2
+            # `operand` is purely numeric (scalar or array-like). Eg. the right operand
+            # in `(8 mV) * 2`.
             operand = Array(operand, dimensionless)
         return operand
 
@@ -209,8 +212,30 @@ def __array_ufunc__(
         unit_comparison_result = left_array.data_unit == right_array.data_unit
         return np.logical_and(data_comparison_result, unit_comparison_result)
 
+    #
+    #
+    # Division
+    # --------
+    #
+    # Examples:
+    #   - 8 mV / 3 mV
+    #   - 8 mV / mV
+    #   - mV / second
+    #   - [8 3] mV / 6 second
+    #   - 8 / second
     elif ufunc == np.divide:
-        ...
+
+        # Allow `1 / mV` as a special case to create a pure Unit (`mV⁻¹`), and not a
+        # Quantity with value = 1.
+        if (
+            isinstance(left_operand, int)
+            and left_operand == 1
+            and isinstance(right_array, Unit)
+        ):
+            return right_array ** -1
+
+        else:
+            return left_array * (right_array ** -1)
 
     else:
         ...
