@@ -10,13 +10,29 @@ class PoweredUnitAtom(CompoundUnit):
     """
     Eg "mm²"; as contrasted with "mm" (a `UnitAtom`) or "N/mm²" (a `CompoundUnit`).
 
-    Characteristic attributes:
+    Defining attributes:
         - unit_atom: UnitAtom
         - power: int
     """
 
+    unit_atom: UnitAtom
+
+    def __new__(cls, unit_atom: "UnitAtom", power: int):
+
+        from ._1_unit_atom import dimensionless
+
+        if power == 0:
+            return dimensionless
+
+        elif power == 1:
+            return unit_atom
+
+        else:
+            return object.__new__(cls)
+            #   `cls` can be `PoweredUnitAtom` or `PoweredDataUnitAtom`.
+
     def __init__(self, unit_atom: "UnitAtom", power: int):
-        CompoundUnit.__init__(self, components=[self])
+        super().__init__(self, components=(self,))
         self.unit_atom = unit_atom
         self.power = power
 
@@ -52,5 +68,6 @@ class PoweredUnitAtom(CompoundUnit):
 
 
 class PoweredDataUnitAtom(DataUnit, PoweredUnitAtom):
-    def __init__(self, unit_atom: "DataUnitAtom", power: int):
-        PoweredUnitAtom.__init__(self, unit_atom, power)
+
+    def __new__(cls, unit_atom: "DataUnitAtom", power: int):
+        return PoweredUnitAtom.__new__(cls, unit_atom, power)

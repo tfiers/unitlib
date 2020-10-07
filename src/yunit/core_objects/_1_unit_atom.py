@@ -7,7 +7,7 @@ class UnitAtom(PoweredUnitAtom):
     Eg "volt" or "mV";
     as contrasted with "mV²" (a `PoweredUnitAtom`) or "N·mV²" (a `CompoundUnit`).
 
-    Characteristic attributes:
+    Defining attributes:
         - name: str
         - data_unit: DataUnitAtom
         - scale: float
@@ -24,6 +24,8 @@ class UnitAtom(PoweredUnitAtom):
         # the annoying verbosity of dummy variables and trivial property getters. (And
         # no, using `self.name = property(..)` or `self.__dict__["name"] = ..` also
         # doesn't work :) ).
+
+    __new__ = object.__new__  # Do not use PoweredUnitAtom's custom __new__.
 
     @property
     def name(self):
