@@ -34,13 +34,16 @@ numeric_methods = (
 supported_ufuncs = comparators + numeric_methods
 
 
+YunitObject = Union[Array, Quantity, Unit]
+
+
 def __array_ufunc__(
-    self: Union[Unit, Quantity, Array],
+    self: YunitObject,
     ufunc: np.ufunc,
     method: str,
-    *inputs: Tuple[Union[Unit, Quantity, Array, NDArrayLike], ...],
+    *inputs: Tuple[Union[YunitObject, NDArrayLike], ...],
     **ufunc_kwargs,
-) -> Union[Unit, Quantity, Array, np.ndarray, bool]:
+) -> Union[YunitObject, np.ndarray, bool]:
 
     # Docs for __array_ufunc__:
     # https://numpy.org/doc/stable/reference/arrays.classes.html#numpy.class.__array_ufunc__
@@ -107,7 +110,7 @@ def __array_ufunc__(
 
     def get_output_of_correct_type(
         new_display_unit: Unit,
-    ) -> Union[np.ndarray, Unit, Quantity, Array]:
+    ) -> Union[np.ndarray, YunitObject]:
 
         if is_in_place:
             self.display_unit = new_display_unit
