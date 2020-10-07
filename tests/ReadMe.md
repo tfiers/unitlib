@@ -14,5 +14,5 @@
    pytest
    ```
 
-These tests are also [run automatically](../.github/workflows/autotest.yml) 
+These tests are also [run automatically](../.github/workflows/CI.yml) 
 on every push of Python code to GitHub, on a range of different Python versions and OS'es.

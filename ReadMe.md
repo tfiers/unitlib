@@ -30,7 +30,7 @@ This will get you the
 
 The following indicates whether the latest commit on the main branch passes all tests:
 
-[![autotest status](https://github.com/tfiers/yunit/workflows/autotest/badge.svg)](https://github.com/tfiers/yunit/actions)
+[![CI status](https://github.com/tfiers/yunit/workflows/CI/badge.svg)](https://github.com/tfiers/yunit/actions)
 
 (This only pertains to development code. The `yunit` versions on PyPI
 pass all tests on release, of course).
