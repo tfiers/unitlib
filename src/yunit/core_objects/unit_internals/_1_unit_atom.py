@@ -25,7 +25,9 @@ class UnitAtom(PoweredUnitAtom):
         # no, using `self.name = property(..)` or `self.__dict__["name"] = ..` also
         # doesn't work :) ).
 
-    __new__ = object.__new__  # Do not use PoweredUnitAtom's custom __new__.
+    # Do not use PoweredUnitAtom's custom __new__.
+    def __new__(cls, *args, **kwargs):
+        return object.__new__(cls)
 
     @property
     def name(self):
