@@ -15,8 +15,6 @@ class PoweredUnitAtom(CompoundUnit):
         - power: int
     """
 
-    unit_atom: UnitAtom
-
     def __new__(cls, unit_atom: "UnitAtom", power: int):
         if power == 0:
             return dimensionless
@@ -27,7 +25,7 @@ class PoweredUnitAtom(CompoundUnit):
             #   `cls` can be `PoweredUnitAtom` or `PoweredDataUnitAtom`.
 
     def __init__(self, unit_atom: "UnitAtom", power: int):
-        super().__init__(self, components=(self,))
+        super().__init__(components=(self,))
         self.unit_atom = unit_atom
         self.power = power
 
