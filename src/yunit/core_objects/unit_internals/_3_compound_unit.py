@@ -26,7 +26,7 @@ class CompoundUnit(Unit):
 
         from ._1_unit_atom import UnitAtom
 
-        flattened_units = chain(*unit.components for unit in units)
+        flattened_units = chain(*(unit.components for unit in units))
 
         # Aggregate all `PoweredUnitAtom`s that have the same `unit_atom`, and sum their
         # powers. Throw away dimensionless components and components with a combined
@@ -52,23 +52,23 @@ class CompoundUnit(Unit):
 
     @property
     def name(self):
-        return "·".join(*component.name for component in self.components)
+        return "·".join([component.name for component in self.components])
 
     @property
     def data_unit(self) -> "CompoundDataUnit":
         return CompoundDataUnit.squeeze(
-            *component.data_unit for component in self.components
+            [component.data_unit for component in self.components]
         )
 
     @property
     def scale(self) -> float:
-        return prod(*component.scale for component in self.components)
+        return prod([component.scale for component in self.components])
 
     def __hash__(self):
         return hash(self.components)
 
     def _raised_to(self, power: int):
-        return self.squeeze(*component ** power for component in self.components)
+        return self.squeeze([component ** power for component in self.components])
 
 
 class CompoundDataUnit(DataUnit, CompoundUnit):
