@@ -1,8 +1,19 @@
-# How to run tests
+# Tests
+
+The Python files in this directory contain a range of unit tests. These are functions
+(recognized by their name, which start in `test_`) which verify that all `yunit`
+features work as expected, and so ensure that code updates don't introduce any
+regressions.
+
+These tests are [run automatically](../.github/workflows/CI.yml) 
+on every push of code to GitHub, on a range of different Python versions and OS's.
+
+
+## How to run tests locally
 
 1. Install your local version of the `yunit` package, by running,
    in the project root dir:
-    ```
+   ```
    pip install -e .
    ```
 2. Install the testing requirements:
@@ -13,6 +24,3 @@
    ```
    pytest
    ```
-
-These tests are also [run automatically](../.github/workflows/CI.yml) 
-on every push of Python code to GitHub, on a range of different Python versions and OS'es.
