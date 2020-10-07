@@ -110,14 +110,11 @@ def __array_ufunc__(
 
     def get_output_of_correct_type(
         new_display_unit: Unit,
-    ) -> Union[np.ndarray, YunitObject]:
+    ) -> Union[np.ndarray, Array, Quantity]:
 
         if is_in_place:
             self.display_unit = new_display_unit
             return self
-
-        elif isinstance(left_array, Unit) and isinstance(right_array, Unit):
-            return new_display_unit
 
         elif new_display_unit == dimensionless:
             return ufunc_data_output
@@ -161,7 +158,10 @@ def __array_ufunc__(
         new_display_unit = left_array.display_unit._raised_to(
             power=right_array.data.item()
         )
-        return get_output_of_correct_type(new_display_unit)
+        if isinstance(left_array, Unit):
+            return new_display_unit
+        else:
+            return get_output_of_correct_type(new_display_unit)
 
     #
     #
@@ -293,7 +293,10 @@ def __array_ufunc__(
         new_display_unit = CompoundUnit.squeeze(
             [left_array.display_unit, right_array.display_unit]
         )
-        return get_output_of_correct_type(new_display_unit)
+        if isinstance(left_array, Unit) and isinstance(right_array, Unit):
+            return new_display_unit
+        else:
+            return get_output_of_correct_type(new_display_unit)
 
     else:
         ...

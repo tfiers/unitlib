@@ -1,6 +1,7 @@
 from numpy import allclose as numeric_equals
 
 from yunit import Unit
+from yunit.core_objects.unit_internals import PoweredUnitAtom
 from yunit.prefixes import milli, nano
 
 
@@ -38,6 +39,7 @@ def test_one_over():
 
 def test_power():
     up = mV ** 3
+    assert isinstance(up, PoweredUnitAtom)
     assert up.power == 3
     assert up.data_unit == volt ** 3
     assert up.name == "mV³"
