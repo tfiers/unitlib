@@ -100,7 +100,15 @@ def __array_ufunc__(
         left_array.data, right_array.data, **ufunc_kwargs
     )
 
-    def create_output(new_display_unit):
+    #
+    #
+    # Select/create output object
+    # --------------------------
+
+    def get_output_of_correct_type(
+        new_display_unit: Unit,
+    ) -> Union[np.ndarray, Unit, Quantity, Array]:
+
         if is_in_place:
             self.display_unit = new_display_unit
             return self
@@ -150,7 +158,7 @@ def __array_ufunc__(
         new_display_unit = left_array.display_unit._raised_to(
             power=right_array.data.item()
         )
-        return create_output(new_display_unit)
+        return get_output_of_correct_type(new_display_unit)
 
     #
     #
@@ -198,7 +206,7 @@ def __array_ufunc__(
         else:
             new_display_unit = right_array.display_unit
 
-        return create_output(new_display_unit)
+        return get_output_of_correct_type(new_display_unit)
 
     #
     #
@@ -282,7 +290,7 @@ def __array_ufunc__(
         new_display_unit = CompoundUnit.squeeze(
             [left_array.display_unit, right_array.display_unit]
         )
-        return create_output(new_display_unit)
+        return get_output_of_correct_type(new_display_unit)
 
     else:
         ...
