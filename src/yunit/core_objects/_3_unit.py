@@ -2,6 +2,8 @@ from abc import ABC, abstractproperty, abstractmethod
 from numbers import Number
 from typing import Optional
 
+import numpy as np
+
 from ._2_quantity import Quantity
 from ..backwards_compatibility import TYPE_CHECKING
 from ..prefixes import Prefix
@@ -124,7 +126,7 @@ class Unit(Quantity, ABC):
 
     @property
     def data(self):
-        return self.scale
+        return np.array(self.scale)
 
     @property
     def display_unit(self):
