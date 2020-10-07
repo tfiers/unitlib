@@ -193,9 +193,12 @@ def __array_ufunc__(
                 f'"{left_array.display_unit}" and "{right_array.display_unit}".'
             )
 
-        # todo:
-        # - take largest unit
-        # - [ufunc application & output creation]
+        if left_array.display_unit > right_array.display_unit:
+            new_display_unit = left_array.display_unit
+        else:
+            new_display_unit = right_array.display_unit
+
+        return create_output(new_display_unit)
 
     #
     #
