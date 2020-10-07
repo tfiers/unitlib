@@ -60,4 +60,6 @@ class DataUnitAtom(DataUnit, UnitAtom):
         return PoweredDataUnitAtom(unit_atom=self, power=power)
 
 
-dimensionless = DataUnitAtom("")
+dimensionless = DataUnitAtom("<dimensionless>")
+#   We give this one a real name (instead of just the empty string) to make debugging
+#   easier.
