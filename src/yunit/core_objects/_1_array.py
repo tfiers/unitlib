@@ -101,7 +101,9 @@ class Array(NDArrayOperatorsMixin):
     def __str__(self):
         return format(self)
 
-    def __format__(self, format_spec: str) -> str:
+    __repr__ = __str__
+
+    def __format__(self, format_spec: str = "") -> str:
         # When no spec is given -- as is the case for `format(array)` and
         # `f"f-strings such as this one, {array}"` -- Python calls this `__format__`
         # method with `format_spec = ""` (and not `None`).
@@ -112,8 +114,6 @@ class Array(NDArrayOperatorsMixin):
             formatter={"float_kind": lambda x: format(x, format_spec)},
         )
         return f"{array_string} {self.display_unit}"
-
-    __repr__ = __str__
 
     #
     #
