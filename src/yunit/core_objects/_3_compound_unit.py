@@ -1,6 +1,6 @@
 from collections import defaultdict
 from itertools import chain
-from typing import Iterable, Dict
+from typing import Iterable, Dict, Tuple
 
 from ._4_unit import DataUnit, Unit
 from ..backwards_compatibility import prod, TYPE_CHECKING
@@ -20,13 +20,12 @@ class CompoundUnit(Unit):
 
     def __init__(self, units: Iterable["CompoundUnit"]):
         flattened_components = chain(unit.components for unit in units)
-        squeezed_components = self._squeeze_components(flattened_components)
-        self.components = tuple(squeezed_components)
+        self.components = self._squeeze(flattened_components)
 
     @staticmethod
-    def _squeeze_components(
+    def _squeeze(
         components: Iterable["PoweredUnitAtom"],
-    ) -> Iterable["PoweredUnitAtom"]:
+    ) -> Tuple["PoweredUnitAtom", ...]:
         """
         Aggregate all `PoweredUnitAtom`s that have the same `unit_atom`, and sum their
         powers. Throw away dimensionless components and components with a combined power
@@ -37,11 +36,15 @@ class CompoundUnit(Unit):
         combined_powers: Dict[UnitAtom, int] = defaultdict(lambda: 0)
         for component in components:
             combined_powers[component.unit_atom] += component.power
-        return (
+        squeezed_components = tuple(
             atom ** power
             for atom, power in combined_powers.items()
             if atom != dimensionless and power != 0
         )
+        if len(squeezed_components) == 0:
+            return (dimensionless,)
+        else:
+            return squeezed_components
 
     @property
     def name(self):
