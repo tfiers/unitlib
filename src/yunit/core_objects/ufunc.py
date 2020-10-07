@@ -11,6 +11,7 @@ from typing import Union, Tuple
 import numpy as np
 
 from . import Array, Unit, dimensionless, Quantity
+from ._3_compound_unit import CompoundUnit
 from ..type_aliases import NDArrayLike
 
 equality_comparators = (np.equal, np.not_equal)
@@ -74,7 +75,7 @@ def __array_ufunc__(
 
     left_operand, right_operand = inputs
 
-    def as_array(operand: Union[Array, NDArrayLike]) -> Array:
+    def as_array(operand: Union[NDArrayLike, Array]) -> Array:
         if not isinstance(operand, Array):
             # `operand` is purely numeric (scalar or array-like). Eg. the right operand
             # in `(8 mV) * 2`.
@@ -83,12 +84,48 @@ def __array_ufunc__(
 
     left_array, right_array = map(as_array, inputs)
 
+    #
+    #
+    # Process numeric data
+    # --------------------
+
     is_in_place = ufunc_kwargs.get("out") == self
     #      Whether this __array_ufunc__ call is an in-place operation such as
     #      `array *= 2`. See `numpy.lib.mixins._inplace_binary_method`, which added the
     #      `out=self` kwarg.
     if is_in_place:
         ufunc_kwargs.update(out=self.data)
+
+    ufunc_data_output: np.ndarray = ufunc(
+        left_array.data, right_array.data, **ufunc_kwargs
+    )
+
+    def create_output(new_display_unit):
+        if is_in_place:
+            self.display_unit = new_display_unit
+            return self
+
+        elif isinstance(left_array, Unit) and isinstance(right_array, Unit):
+            return new_display_unit
+
+        elif new_display_unit == dimensionless:
+            return ufunc_data_output
+
+        elif ufunc_data_output.size == 1:
+            return Quantity(
+                ufunc_data_output,
+                new_display_unit,
+                name=None,
+                value_is_given_in_display_units=False,
+            )
+
+        else:
+            return Array(
+                ufunc_data_output,
+                new_display_unit,
+                name=None,
+                data_are_given_in_display_units=False,
+            )
 
     #
     #
@@ -110,20 +147,10 @@ def __array_ufunc__(
         and right_array.data.size == 1
         and issubclass(right_array.data.dtype.type, np.integer)
     ):
-        power = right_array.data.item()
-        new_display_unit = left_array.display_unit._raised_to(power)
-        if isinstance(left_array, Unit):
-            return new_display_unit
-        else:
-            # ufunc application & output creation:
-            new_data = ufunc(left_array.data, right_array.data, **ufunc_kwargs)
-            if is_in_place:
-                self.display_unit = new_display_unit
-                return self
-            else:
-                return left_array.__class__(
-                    new_data, new_display_unit, left_array.name, False
-                )
+        new_display_unit = left_array.display_unit._raised_to(
+            power=right_array.data.item()
+        )
+        return create_output(new_display_unit)
 
     #
     #
@@ -144,8 +171,7 @@ def __array_ufunc__(
     elif np.ufunc in (np.add, np.subtract):
 
         if isinstance(left_array, Unit) or isinstance(right_array, Unit):
-
-            if isinstance(self, Unit):
+            if isinstance(left_array, Unit):
                 if ufunc == np.add:
                     preposition = "to "
                 else:
@@ -168,7 +194,8 @@ def __array_ufunc__(
             )
 
         # todo:
-        # [ufunc application & output creation]
+        # - take largest unit
+        # - [ufunc application & output creation]
 
     #
     #
@@ -190,7 +217,7 @@ def __array_ufunc__(
                 return not (left_array == right_array)
 
         # 8 mV > 9 newton
-        if (
+        elif (
             ufunc in ordering_comparators
             and left_array.data_unit != right_array.data_unit
         ):
@@ -200,17 +227,16 @@ def __array_ufunc__(
                 f'and "{right_array.display_unit}".'
             )
 
+        #  - [80 200] mV > 0.1 volt   (becomes `[False True]`)
+        #  - mV > μV                  (.data = .scale of the first is indeed larger)
+        else:
+            data_comparison_result = ufunc_data_output
+            unit_comparison_result = left_array.data_unit == right_array.data_unit
+            return np.logical_and(data_comparison_result, unit_comparison_result)
+
         # Note that there are no in-place versions of comparator dunders (i.e. __lt__
         # etc). They wouldn't make sense anyway: the type changes from `yunit.Array` to
         # `np.ndarray`.
-
-        #  - [80 200] mV > 0.1 volt   (becomes `[False True]`)
-        #  - mV > μV                  (.data = .scale of the first is indeed larger)
-        data_comparison_result = ufunc(
-            left_array.data, right_array.data, **ufunc_kwargs
-        )
-        unit_comparison_result = left_array.data_unit == right_array.data_unit
-        return np.logical_and(data_comparison_result, unit_comparison_result)
 
     #
     #
@@ -229,13 +255,31 @@ def __array_ufunc__(
         # Quantity with value = 1.
         if (
             isinstance(left_operand, int)
-            and left_operand == 1
+            and left_operand == 1  # This and the first condition could be shortened to
+            #                        `left_operand is 1`. But: __Explicit is better than
+            #                        implicit__.
             and isinstance(right_array, Unit)
         ):
             return right_array ** -1
 
         else:
             return left_array * (right_array ** -1)
+
+    #
+    #
+    # Multiplication
+    # --------------
+    #
+    # Examples:
+    #   - mV * newton
+    #   - 8 mV * 3
+    #   - 8 mV * (mV ** -1)
+    elif ufunc == np.multiply:
+
+        new_display_unit = CompoundUnit.squeeze(
+            [left_array.display_unit, right_array.display_unit]
+        )
+        return create_output(new_display_unit)
 
     else:
         ...
