@@ -22,7 +22,7 @@ This will get you the
 
 [![latest release on PyPI](https://img.shields.io/pypi/v/yunit.svg?label=latest%20release%20on%20PyPI:)](https://pypi.python.org/pypi/yunit/)
 
-`yunit` is [tested](tests/) on Python versions 3.9 down to 3.6, on Windows, Linux and MacOS.
+`yunit` is tested on Python versions 3.9 down to 3.6, on Windows, Linux and MacOS.
 
 
 
