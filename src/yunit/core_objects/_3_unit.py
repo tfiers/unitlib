@@ -114,7 +114,7 @@ class Unit(Quantity, ABC):
         return UnitAtom(
             name=f"{prefix.symbol}{data_unit.name}",
             data_unit=data_unit,
-            data_scale=prefix.factor,
+            scale=prefix.factor,
         )
 
     #

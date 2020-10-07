@@ -13,6 +13,6 @@ def test_from_prefix():
 
 def test_new():
     second = Unit.define("s")
-    minute = Unit.define("min", data_unit=second, data_scale=60)
+    minute = Unit.define("min", data_unit=second, scale=60)
     assert minute.data_unit == second
     assert minute.scale == 60

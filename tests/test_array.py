@@ -11,7 +11,7 @@ nV = Unit.from_prefix(nano, volt)
 
 second = Unit.define("s")
 ms = Unit.from_prefix(milli, second)
-minute = Unit.define("min", data_unit=second, data_scale=60)
+minute = Unit.define("min", data_unit=second, scale=60)
 
 siemens = Unit.define("S")
 nS = Unit.from_prefix(nano, siemens)
