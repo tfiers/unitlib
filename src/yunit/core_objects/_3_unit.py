@@ -77,6 +77,9 @@ class Unit(Quantity, ABC):
     def __repr__(self):
         return f'<{self.__class__.__name__} "{self.name}">'
 
+    def __format__(self, format_spec: str = "") -> str:
+        return str(self)
+
     @abstractmethod
     def __hash__(self) -> int:
         """ Used for unit (in)equality checks. """
