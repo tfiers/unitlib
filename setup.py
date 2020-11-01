@@ -29,7 +29,8 @@ setup(
     install_requires=(
         "numpy >= 1.17",
         #   `__array_function__` (which we use in `Array`) is introduced in NumPy 1.16,
-        #   and enabled without the need for setting a special env var in NumPy 1.17.
+        #   and enabled by default in NumPy 1.17 (i.e. without the need for setting a
+        #   special env var).
         #
         # Requirements for older Python versions only:
         #
