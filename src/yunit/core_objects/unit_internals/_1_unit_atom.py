@@ -25,10 +25,6 @@ class UnitAtom(PoweredUnitAtom):
         # no, using `self.name = property(..)` or `self.__dict__["name"] = ..` also
         # doesn't work :) ).
 
-    # Do not use PoweredUnitAtom's custom __new__.
-    def __new__(cls, *args, **kwargs):
-        return object.__new__(cls)
-
     @property
     def name(self):
         return self._name
@@ -44,9 +40,6 @@ class UnitAtom(PoweredUnitAtom):
     def __hash__(self):
         return hash((self.name, self.data_unit, self.scale))
 
-    def _raised_to(self, power):
-        return PoweredUnitAtom(unit_atom=self, power=power)
-
 
 class DataUnitAtom(DataUnit, UnitAtom):
     def __init__(self, name: str):
@@ -55,9 +48,6 @@ class DataUnitAtom(DataUnit, UnitAtom):
 
     def __hash__(self):
         return hash(self.name)
-
-    def _raised_to(self, power):
-        return PoweredDataUnitAtom(unit_atom=self, power=power)
 
 
 dimensionless = DataUnitAtom("<dimensionless>")

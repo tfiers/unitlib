@@ -36,7 +36,7 @@ class CompoundUnit(Unit):
             combined_powers[unit.unit_atom] += unit.power
 
         squeezed_units = tuple(
-            unit_atom ** combined_power
+            unit_atom._raised_to(combined_power)
             for unit_atom, combined_power in combined_powers.items()
             if unit_atom != dimensionless and combined_power != 0
         )

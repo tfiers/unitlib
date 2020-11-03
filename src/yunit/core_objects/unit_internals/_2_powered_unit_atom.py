@@ -15,15 +15,6 @@ class PoweredUnitAtom(CompoundUnit):
         - power: int
     """
 
-    def __new__(cls, unit_atom: "UnitAtom", power: int):
-        if power == 0:
-            return dimensionless
-        elif power == 1:
-            return unit_atom
-        else:
-            return object.__new__(cls)
-            #   `cls` can be `PoweredUnitAtom` or `PoweredDataUnitAtom`.
-
     def __init__(self, unit_atom: "UnitAtom", power: int):
         CompoundUnit.__init__(self, components=(self,))
         self.unit_atom = unit_atom
@@ -46,8 +37,17 @@ class PoweredUnitAtom(CompoundUnit):
 
     # (mV⁻³)**2
     def _raised_to(self, power: int):
-        return self.__class__(self.unit_atom, self.power * power)
-        #   `self.__class__` can be `PoweredUnitAtom` or `PoweredDataUnitAtom`.
+        new_power = self.power * power
+        if new_power == 0:
+            return dimensionless
+        elif new_power == 1:
+            return self.unit_atom
+        else:
+            if isinstance(self, DataUnit):
+                PoweredClass = PoweredDataUnitAtom
+            else:
+                PoweredClass = PoweredUnitAtom
+            return PoweredClass(self.unit_atom, new_power)
 
     @property
     def _power_as_superscript(self) -> str:
@@ -61,5 +61,5 @@ class PoweredUnitAtom(CompoundUnit):
 
 
 class PoweredDataUnitAtom(DataUnit, PoweredUnitAtom):
-    def __new__(cls, unit_atom: "DataUnitAtom", power: int):
-        return PoweredUnitAtom.__new__(cls, unit_atom, power)
+    def __init__(self, unit_atom: "DataUnitAtom", power: int):
+        PoweredUnitAtom.__init__(self, unit_atom, power)
