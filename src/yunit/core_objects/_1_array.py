@@ -104,9 +104,7 @@ class Array(NDArrayOperatorsMixin):
     __repr__ = __str__
 
     def __format__(self, format_spec: str = "") -> str:
-        # When no spec is given -- as is the case for `format(array)` and
-        # `f"f-strings such as this one, {array}"` -- Python calls this `__format__`
-        # method with `format_spec = ""` (and not `None`).
+        """ Called for `format(array)` and `f-strings containing {array}`. """
         if not format_spec:
             format_spec = ".4G"
         array_string = np.array2string(
@@ -129,9 +127,9 @@ class Array(NDArrayOperatorsMixin):
     # `__mul__` and `__imul__`, so that we can use standard Python syntax like `*` and
     # `*=` with our `Array`s.
     #
-    # (`NDArrayOperatorsMixin` implements these by calling the
+    # `NDArrayOperatorsMixin` implements these by calling the
     # corresponding NumPy ufuncs [like `np.multiply`], which in turn defer to our
-    # `__array_ufunc__` method).
+    # `__array_ufunc__` method.
 
     # Elementwise operations (+, >, cos, sign, ..)
     def __array_ufunc__(self, *args, **kwargs):

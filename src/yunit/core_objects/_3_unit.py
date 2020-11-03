@@ -23,9 +23,13 @@ class Unit(Quantity, ABC):
 
     This abstract base class (`ABC`) defines the interface and functionality common to
     all `Unit` subclasses:
-        - `UnitAtom` and `DataUnitAtom`
-        - `PoweredUnitAtom` and `PoweredDataUnitAtom`
-        - `CompoundUnit` and `CompoundDataUnit`.
+        - `DataUnit`
+        - `UnitAtom`
+        - `DataUnitAtom`
+        - `PoweredUnitAtom`
+        - `PoweredDataUnitAtom`
+        - `CompoundUnit`
+        - `CompoundDataUnit`.
     """
 
     #

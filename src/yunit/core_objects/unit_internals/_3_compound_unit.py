@@ -34,6 +34,7 @@ class CompoundUnit(Unit):
         combined_powers: Dict[UnitAtom, int] = defaultdict(lambda: 0)
         for unit in flattened_units:
             combined_powers[unit.unit_atom] += unit.power
+
         squeezed_units = tuple(
             unit_atom ** combined_power
             for unit_atom, combined_power in combined_powers.items()
