@@ -31,6 +31,7 @@ def test_div():
 
 def test_one_over():
     oou = 1 / mV
+    assert isinstance(oou, PoweredUnitAtom)
     assert oou.power == -1
     assert oou.data_unit == 1 / volt
     assert numeric_equals(oou.scale, 1e3)
