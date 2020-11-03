@@ -25,7 +25,7 @@ class PoweredUnitAtom(CompoundUnit):
             #   `cls` can be `PoweredUnitAtom` or `PoweredDataUnitAtom`.
 
     def __init__(self, unit_atom: "UnitAtom", power: int):
-        super().__init__(components=(self,))
+        CompoundUnit.__init__(self, components=(self,))
         self.unit_atom = unit_atom
         self.power = power
 
