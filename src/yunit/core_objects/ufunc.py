@@ -226,9 +226,6 @@ def __array_ufunc__(
 
         return make_output(new_display_unit)
 
-    elif np.ufunc == np.negative:
-        breakpoint()
-
     #
     #
     # Comparison
