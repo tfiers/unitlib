@@ -15,18 +15,18 @@ setup(
     long_description_content_type="text/markdown",
     url=GITHUB_URL,
     project_urls={"Source Code": GITHUB_URL},
-    classifiers=(
+    classifiers=[
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
-    ),
+    ],
     packages=find_packages("src"),
     package_dir={"": "src"},  # This means: "Root package can be found in src dir"
     python_requires=">= 3.6",
     #   Why this minimum Python version?
     #   `typing-extensions` (see below) does not provide a backport for
     #   `typing.Protocol` (which we use in `type_aliases.py`) for Python 3.5.
-    install_requires=(
+    install_requires=[
         "numpy >= 1.17",
         #   `__array_function__` (which we use in `Array`) is introduced in NumPy 1.16,
         #   and enabled by default in NumPy 1.17 (i.e. without the need for setting a
@@ -39,7 +39,7 @@ setup(
         "typing-extensions; python_version < '3.8'",
         #   Provides backports of eg `TYPE_CHECKING`, which was not part of the `typing`
         #   module until Python 3.8.
-    ),
+    ],
     # Get package version from git tags
     setup_requires=["setuptools_scm"],
     use_scm_version={
