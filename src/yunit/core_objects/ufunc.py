@@ -86,6 +86,8 @@ def __array_ufunc__(
         return operand
 
     left_array, right_array = map(as_array, inputs)
+    left_array: Array  # Helping PyCharm's type inference
+    right_array: Array
 
     #
     #
@@ -183,11 +185,11 @@ def __array_ufunc__(
 
         if isinstance(left_array, Unit) or isinstance(right_array, Unit):
             if isinstance(left_array, Unit):
-                if ufunc == np.add:
+                if ufunc == np.add:  # add to a Unit
                     preposition = "to "
-                else:
+                else:  # subtract from a Unit
                     preposition = "from "
-            else:
+            else:  # add/subtract a Unit
                 preposition = ""
             raise UnitError(
                 f"Cannot {ufunc.__name__} {preposition}a bare unit. "
