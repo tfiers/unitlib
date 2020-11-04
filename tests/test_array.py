@@ -48,7 +48,7 @@ def test_power():
 
 def test_quantity():
     time = 2 * minute
-    assert time.value_unit == time.display_unit == minute
+    assert time.display_unit == minute
     assert time.data_unit == second
     assert time.value == time.data_in_display_units.item() == 2
     assert time.data.item() == 120
