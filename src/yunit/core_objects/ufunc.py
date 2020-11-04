@@ -6,7 +6,7 @@ as well as all NumPy elementwise functions (`cos`, `sign`, `abs`, …),
 for both Arrays, Quantities, and Units.
 """
 
-from typing import Union, Tuple
+from typing import Union, Tuple, Optional
 
 import numpy as np
 
@@ -67,18 +67,18 @@ def __array_ufunc__(
 
     #
     #
-    # ------------
-    # Parse inputs
+    # -------------
+    # Parse `inputs`
 
     # - For unary operators (cos, sign, abs, …), `len(inputs)` is 1.
     # - For binary operators (+, >, **, …), it is 2.
-    # - For 'normal' operations (`8 mV * 3`, __mul__) and in-place operations
-    #   (`8 mV *= 3`, __imul__), `inputs[0] == self`
-    # - For reflected operations (`3 * 8 mV`, __rmul__), `inputs[1] == self`.
+    # - For 'normal' operations (`8 mV * 3`, i.e. `__mul__`) and in-place operations
+    #   (`8 mV *= 3`, i.e. `__imul__`), `inputs[0] == self`
+    # - For reflected operations (`3 * 8 mV`, i.e. `__rmul__`), `inputs[1] == self`.
 
     left_operand, right_operand = inputs
 
-    def as_array(operand: Union[NDArrayLike, Array]) -> Array:
+    def as_array(operand: Union[NDArrayLike, YunitObject]) -> YunitObject:
         if not isinstance(operand, Array):
             # `operand` is purely numeric (scalar or array-like). Eg. the right operand
             # in `(8 mV) * 2`.
@@ -89,30 +89,37 @@ def __array_ufunc__(
     left_array: Array  # Helping PyCharm's type inference
     right_array: Array
 
-    #
-    #
-    # Process numeric data
-    # --------------------
-
-    is_in_place = ufunc_kwargs.get("out") is self
-    #      Whether this __array_ufunc__ call is an in-place operation such as
-    #      `array *= 2`. See `numpy.lib.mixins._inplace_binary_method`, which added the
-    #      `out=self` kwarg.
-    if is_in_place:
-        ufunc_kwargs.update(out=self.data)
-
-    ufunc_data_output: np.ndarray = ufunc(
-        left_array.data, right_array.data, **ufunc_kwargs
-    )
-
-    #
-    #
-    # Select/create output object
-    # --------------------------
-
-    def get_output_of_correct_type(
+    def make_output(
         new_display_unit: Unit,
+        left_numpy_ufunc_arg: Optional[np.ndarray] = None,
+        right_numpy_ufunc_arg: Optional[np.ndarray] = None,
     ) -> Union[np.ndarray, Array, Quantity]:
+
+        #
+        #
+        # Process numeric data
+        # --------------------
+
+        is_in_place = ufunc_kwargs.get("out") is self
+        #      Whether this __array_ufunc__ call is an in-place operation such as
+        #      `array *= 2`. See `numpy.lib.mixins._inplace_binary_method`, which added
+        #      the `out=self` kwarg.
+        if is_in_place:
+            ufunc_kwargs.update(out=self.data)
+
+        if left_numpy_ufunc_arg is None:
+            left_numpy_ufunc_arg = left_array.data
+        if right_numpy_ufunc_arg is None:
+            right_numpy_ufunc_arg = right_array.data
+
+        ufunc_data_output: np.ndarray = ufunc(
+            left_numpy_ufunc_arg, right_numpy_ufunc_arg, **ufunc_kwargs
+        )
+
+        #
+        #
+        # Select/create output object of correct type
+        # ------------------------------------------
 
         if is_in_place:
             self.display_unit = new_display_unit
@@ -157,13 +164,19 @@ def __array_ufunc__(
         and right_array.data.size == 1
         and issubclass(right_array.data.dtype.type, np.integer)
     ):
-        new_display_unit = left_array.display_unit._raised_to(
-            power=right_array.data.item()
-        )
+        power = right_array.data.item()
+        new_display_unit = left_array.display_unit._raised_to(power)
         if isinstance(left_array, Unit):
             return new_display_unit
         else:
-            return get_output_of_correct_type(new_display_unit)
+            if power < 0 and issubclass(left_array.data.dtype.type, np.integer):
+                # NumPy doesn't allow exponentiating integers to negative powers
+                # (Because it changes the data type to no longer be integer,
+                # presumably). We (just like plain Python) do allow it however.
+                left_numpy_ufunc_arg = float(left_array.data)
+            else:
+                left_numpy_ufunc_arg = left_array.data
+            return make_output(new_display_unit, left_numpy_ufunc_arg)
 
     #
     #
@@ -211,7 +224,10 @@ def __array_ufunc__(
         else:
             new_display_unit = right_array.display_unit
 
-        return get_output_of_correct_type(new_display_unit)
+        return make_output(new_display_unit)
+
+    elif np.ufunc == np.negative:
+        breakpoint()
 
     #
     #
@@ -246,13 +262,16 @@ def __array_ufunc__(
         #  - [80 200] mV > 0.1 volt   (becomes `[False True]`)
         #  - mV > μV                  (.data = .scale of the first is indeed larger)
         else:
-            data_comparison_result = ufunc_data_output
+            data_comparison_result = ufunc(
+                left_array.data,
+                right_array.data,
+                **ufunc_kwargs,
+            )
             unit_comparison_result = left_array.data_unit == right_array.data_unit
             return np.logical_and(data_comparison_result, unit_comparison_result)
-
-        # Note that there are no in-place versions of comparator dunders (i.e. __lt__
-        # etc). They wouldn't make sense anyway: the type changes from `yunit.Array` to
-        # `np.ndarray`.
+            # Note that there are no in-place versions of comparator dunders (i.e. __lt__
+            # etc). They wouldn't make sense anyway: the type changes from `yunit.Array` to
+            # `np.ndarray`.
 
     #
     #
@@ -298,7 +317,7 @@ def __array_ufunc__(
         if isinstance(left_array, Unit) and isinstance(right_array, Unit):
             return new_display_unit
         else:
-            return get_output_of_correct_type(new_display_unit)
+            return make_output(new_display_unit)
 
     else:
         ...
