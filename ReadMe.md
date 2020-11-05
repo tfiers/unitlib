@@ -1,11 +1,11 @@
 # 📐 yunit
 
 - Physical units for NumPy arrays.
-- Fast • Simple • High voltage
+- Fast, simple, high voltage ⚡
 
 
 
-## Raison d'être
+## Why
 
 `yunit` was born out of frustration with other Python unit packages.
 Those packages work well for toy experiments, but they greatly slow down your code.
