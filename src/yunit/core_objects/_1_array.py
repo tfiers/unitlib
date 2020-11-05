@@ -71,7 +71,7 @@ class Array(NDArrayOperatorsMixin):
         data_are_given_in_display_units: bool = False,
     ):
         """
-        :param data:  Array-like.
+        :param data:  Numeric array-like.
         :param display_unit:  Units in which to display the data.
         :param name:  What the data represents (e.g. "Membrane potential").
         :param data_are_given_in_display_units:  If True, the given `data` is taken to
@@ -104,7 +104,7 @@ class Array(NDArrayOperatorsMixin):
     __repr__ = __str__
 
     def __format__(self, format_spec: str = "") -> str:
-        """ Called for `format(array)` and `f-strings containing {array}`. """
+        """ Called for `format(array)` and `f"String interpolation with {array}"`. """
         if not format_spec:
             format_spec = ".4G"
         array_string = np.array2string(
