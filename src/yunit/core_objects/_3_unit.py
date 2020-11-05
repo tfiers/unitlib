@@ -160,3 +160,10 @@ class DataUnit(Unit, ABC):
     @property
     def scale(self):
         return 1
+
+
+class UnitError(Exception):
+    """
+    Raised when an operation with incompatible units is attempted
+    (eg `8 volt + 2 newton`).
+    """

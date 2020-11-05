@@ -1,12 +1,14 @@
-from typing import Optional
+from typing import Optional, Tuple, Union, Dict, Any
 
 import numpy as np
 from numpy.lib.mixins import NDArrayOperatorsMixin
 
 from ..backwards_compatibility import TYPE_CHECKING
+from ..type_aliases import NDArrayLike
 
 if TYPE_CHECKING:
     from ._3_unit import Unit, DataUnit
+    from . import YunitObject
 
 
 class Array(NDArrayOperatorsMixin):
@@ -128,15 +130,39 @@ class Array(NDArrayOperatorsMixin):
     # `*=` with our `Array`s.
     #
     # `NDArrayOperatorsMixin` implements these by calling the
-    # corresponding NumPy ufuncs [like `np.multiply`], which in turn defer to our
+    # corresponding NumPy ufunc_handling [like `np.multiply`], which in turn defer to our
     # `__array_ufunc__` method.
 
     # Elementwise operations (+, >, cos, sign, ..)
-    def __array_ufunc__(self, *args, **kwargs):
-        # Delegate implementation to a separate module, to keep this file overview-able.
-        from .ufunc import __array_ufunc__
+    def __array_ufunc__(
+        self,
+        ufunc: np.ufunc,
+        method: str,
+        *inputs: Tuple[Union["YunitObject", NDArrayLike], ...],
+        **ufunc_kwargs: Dict[str, Any],
+    ):
+        from ..ufunc_handling import ufunc_handlers, UfuncArgs
 
-        return __array_ufunc__(self, *args, **kwargs)
+        # Docs for __array_ufunc__:
+        # https://numpy.org/doc/stable/reference/arrays.classes.html#numpy.class.__array_ufunc__
+
+        if method != "__call__":  # method = "reduce", "accumulate", ...
+            raise NotImplementedError(
+                f'yunit objects do not yet support "{method}" ufuncs. '
+                + self._DIY_help_text
+            )
+
+        handler = ufunc_handlers.get(ufunc)
+
+        if not handler:
+            raise NotImplementedError(
+                f"yunit objects do not yet support the `{ufunc.__name__}` operation. "
+                + self._DIY_help_text
+            )
+
+        args = UfuncArgs(ufunc, method, inputs, ufunc_kwargs)
+        output = handler(args)
+        return output
 
     # NumPy methods (mean, sum, linspace, ...)
     def __array_function__(self, func, _types, _args, _kwargs):

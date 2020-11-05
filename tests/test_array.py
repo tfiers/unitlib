@@ -63,7 +63,7 @@ def test_array():
 def test_quantity_mul():
     smu = 3 * mV
     assert isinstance(smu, Quantity)
-    # assert 2 * smu == smu + smu  # todo: implement ufunc `equal`
+    assert 2 * smu == smu + smu
 
 
 def test_remove_units():
@@ -84,6 +84,8 @@ def test_neg():
     with pytest.raises(NotImplementedError):
         -a
 
+
 def test_raise_to_array():
     a = 8 * mV
-    a ** [2, 3]
+    with pytest.raises(ValueError):
+        a ** [2, 3]
