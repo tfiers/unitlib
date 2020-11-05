@@ -130,7 +130,7 @@ class Array(NDArrayOperatorsMixin):
     # `*=` with our `Array`s.
     #
     # `NDArrayOperatorsMixin` implements these by calling the
-    # corresponding NumPy ufunc_handling [like `np.multiply`], which in turn defer to our
+    # corresponding NumPy ufunc [like `np.multiply`], which in turn defer to our
     # `__array_ufunc__` method.
 
     # Elementwise operations (+, >, cos, sign, ..)
