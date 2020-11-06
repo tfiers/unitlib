@@ -2,7 +2,8 @@ from typing import Optional
 
 import numpy as np
 
-from yunit.core_objects import Unit
+from yunit.core_objects import Unit, dimensionless
+from yunit.core_objects.util import create_Array_or_Quantity
 from .registry import UfuncOutput
 from .ufunc_args import UfuncArgs
 
@@ -12,27 +13,10 @@ def make_ufunc_output(
     numpy_ufunc_output: np.ndarray,
 ) -> UfuncOutput:
     """ Select/create output object of correct type """
-
-    from yunit.core_objects import dimensionless, Quantity, Array
-
     if new_display_unit == dimensionless:
         return numpy_ufunc_output
-
-    elif numpy_ufunc_output.size == 1:
-        return Quantity(
-            numpy_ufunc_output,
-            new_display_unit,
-            name=None,
-            value_is_given_in_display_units=False,
-        )
-
     else:
-        return Array(
-            numpy_ufunc_output,
-            new_display_unit,
-            name=None,
-            data_are_given_in_display_units=False,
-        )
+        return create_Array_or_Quantity(numpy_ufunc_output, new_display_unit)
 
 
 def make_binary_ufunc_output(

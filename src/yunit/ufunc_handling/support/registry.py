@@ -2,8 +2,9 @@ from typing import Dict, Iterable, Union, Callable
 
 import numpy as np
 
-from yunit.core_objects import YunitObject
+from yunit.core_objects.type_aliases import YunitObject
 from .ufunc_args import UfuncArgs
+
 
 UfuncOutput = Union[YunitObject, np.ndarray, bool]
 UfuncHandler = Callable[[UfuncArgs], UfuncOutput]

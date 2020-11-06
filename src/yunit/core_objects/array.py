@@ -4,7 +4,6 @@ import numpy as np
 from numpy.lib.mixins import NDArrayOperatorsMixin
 
 from ..backwards_compatibility import TYPE_CHECKING
-from ..type_aliases import NDArrayLike
 
 if TYPE_CHECKING:
     from .unit import Unit, DataUnit
@@ -129,16 +128,15 @@ class Array(NDArrayOperatorsMixin):
     # `__mul__` and `__imul__`, so that we can use standard Python syntax like `*` and
     # `*=` with our `Array`s.
     #
-    # `NDArrayOperatorsMixin` implements these by calling the
-    # corresponding NumPy ufunc [like `np.multiply`], which in turn defer to our
-    # `__array_ufunc__` method.
+    # `NDArrayOperatorsMixin` implements these by calling the corresponding NumPy ufunc
+    # (like `np.multiply`), which in turn defer to our `__array_ufunc__` method.
 
     # Elementwise operations (+, >, cos, sign, ..)
     def __array_ufunc__(
         self,
         ufunc: np.ufunc,
         method: str,
-        *inputs: Tuple[Union["YunitObject", NDArrayLike], ...],
+        *inputs: Tuple["UfuncInput", ...],
         **ufunc_kwargs: Dict[str, Any],
     ):
         from ..ufunc_handling import ufunc_handlers, UfuncArgs
@@ -167,8 +165,8 @@ class Array(NDArrayOperatorsMixin):
     # NumPy methods (mean, sum, linspace, ...)
     def __array_function__(self, func, _types, _args, _kwargs):
         raise NotImplementedError(
-            f"`{self.__class__.__name__}` does not yet support being used "
-            f"with function `{func.__name__}`. {self._DIY_help_text}"
+            f"yunit objects do not yet support being used with function"
+            f"`{func.__name__}`. {self._DIY_help_text}"
         )
 
     _DIY_help_text = (  # Shown when a NumPy operation is not implemented yet for our Array.
