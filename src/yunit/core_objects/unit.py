@@ -162,7 +162,7 @@ class DataUnit(Unit, ABC):
         return 1
 
 
-class UnitError(Exception):
+class IncompatibleUnitsError(Exception):
     """
     Raised when an operation with incompatible units is attempted
     (eg `8 volt + 2 newton`).

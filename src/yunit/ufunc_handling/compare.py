@@ -11,7 +11,7 @@ Examples:
 
 import numpy as np
 
-from yunit.core_objects import Unit, UnitError
+from yunit.core_objects import Unit, IncompatibleUnitsError
 from .support import implements, UfuncOutput, UfuncArgs
 
 equality_comparators = (
@@ -42,7 +42,7 @@ def compare(args: UfuncArgs) -> UfuncOutput:
         args.ufunc in ordering_comparators
         and args.left_array.data_unit != args.right_array.data_unit
     ):
-        raise UnitError(
+        raise IncompatibleUnitsError(
             f"Ordering comparator '{args.ufunc.__name__}' cannot be used between "
             f'incompatible Units "{args.left_array.display_unit}" '
             f'and "{args.right_array.display_unit}".'

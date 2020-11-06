@@ -16,7 +16,7 @@ Note that order of operands doesn't matter for unit checks.
 
 import numpy as np
 
-from yunit.core_objects import Unit, UnitError
+from yunit.core_objects import Unit, IncompatibleUnitsError
 from .support import make_binary_ufunc_output, UfuncOutput, implements, UfuncArgs
 
 
@@ -35,14 +35,14 @@ def add_subtract(args: UfuncArgs) -> UfuncOutput:
                 preposition = "from "
         else:  # add/subtract a Unit
             preposition = ""
-        raise UnitError(
+        raise ValueError(
             f"Cannot {args.ufunc.__name__} {preposition}a bare unit. "
             f'Operands were "{args.left_array}" and "{args.right_array}".'
         )
 
     # 800 mV + 1 newton
     if args.left_array.data_unit != args.right_array.data_unit:
-        raise UnitError(
+        raise IncompatibleUnitsError(
             f"Cannot {args.ufunc.__name__} incompatible units "
             f'"{args.left_array.display_unit}" and "{args.right_array.display_unit}".'
         )
