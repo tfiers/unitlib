@@ -11,23 +11,25 @@ Examples:
 import numpy as np
 
 from yunit.core_objects import Unit
+from yunit.core_objects.unit_internals import CompoundUnit
 from .support import make_binary_ufunc_output, UfuncOutput, implements, UfuncArgs
-from ..core_objects.unit_internals import CompoundUnit
 
 
 @implements([np.multiply])
-def multiply(args: UfuncArgs) -> UfuncOutput:
+def multiply(ufunc_args: UfuncArgs) -> UfuncOutput:
+
+    inputs = ufunc_args.parse_binary_inputs()
 
     new_display_unit = CompoundUnit.squeeze(
         [
-            args.left_array.display_unit,
-            args.right_array.display_unit,
+            inputs.left_array.display_unit,
+            inputs.right_array.display_unit,
         ]
     )
 
     # Unit * Unit remains pure Unit.
-    if isinstance(args.left_array, Unit) and isinstance(args.right_array, Unit):
+    if isinstance(inputs.left_array, Unit) and isinstance(inputs.right_array, Unit):
         return new_display_unit
 
     else:
-        return make_binary_ufunc_output(args, new_display_unit)
+        return make_binary_ufunc_output(ufunc_args, inputs, new_display_unit)

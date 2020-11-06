@@ -3,6 +3,7 @@ from typing import Tuple, Dict, Any
 
 import numpy as np
 
+from yunit.core_objects.array import NonNumericDataException, Array
 from yunit.core_objects.type_aliases import UfuncInput
 from yunit.core_objects.util import as_array
 
@@ -14,7 +15,7 @@ class UfuncArgs:
     ufunc: np.ufunc
     method: str
     inputs: Tuple[UfuncInput, ...]
-    ufunc_kwargs: Dict[str, Any]
+    kwargs: Dict[str, Any]
 
     @property
     def is_unary(self) -> bool:
@@ -26,8 +27,23 @@ class UfuncArgs:
         # +, >, **, *=, …
         return len(self.inputs) == 2
 
-    def __post_init__(self):
-        if self.is_binary:
-            self.left_operand, self.right_operand = self.inputs
-            self.left_array = as_array(self.left_operand)
-            self.right_array = as_array(self.right_operand)
+    def parse_binary_inputs(self):
+        try:
+            left, right = self.inputs
+            left_array = as_array(left)
+            right_array = as_array(right)
+            return BinaryUfuncInputs(left, right, left_array, right_array
+                                     )
+        except NonNumericDataException as exception:
+            raise NonNumericDataException(
+                f"Cannot perform `{self.ufunc}` operation with non-numeric data."
+            ) from exception
+
+
+@dataclass
+class BinaryUfuncInputs:
+
+    left_operand: UfuncInput
+    right_operand: UfuncInput
+    left_array: Array
+    right_array: Array

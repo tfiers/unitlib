@@ -17,16 +17,18 @@ from .support import UfuncOutput, implements, UfuncArgs
 
 
 @implements([np.divide])  # np.divide == np.true_divide
-def divide(args: UfuncArgs) -> UfuncOutput:
+def divide(ufunc_args: UfuncArgs) -> UfuncOutput:
+
+    inputs = ufunc_args.parse_binary_inputs()
 
     # Allow `1 / mV` as a special case to create a pure Unit (`mV⁻¹`), and not a
     # Quantity with value = 1.
     if (
-        isinstance(args.left_operand, int)
-        and args.left_operand == 1
-        and isinstance(args.right_array, Unit)
+        isinstance(inputs.left_operand, int)
+        and inputs.left_operand == 1
+        and isinstance(inputs.right_array, Unit)
     ):
-        return args.right_array ** -1
+        return inputs.right_array ** -1
 
     else:
-        return args.left_array * (args.right_array ** -1)
+        return inputs.left_array * (inputs.right_array ** -1)

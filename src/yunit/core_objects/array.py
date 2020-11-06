@@ -1,4 +1,4 @@
-from typing import Optional, Tuple, Union, Dict, Any
+from typing import Optional, Tuple
 
 import numpy as np
 from numpy.lib.mixins import NDArrayOperatorsMixin
@@ -6,9 +6,8 @@ from numpy.lib.mixins import NDArrayOperatorsMixin
 from ..backwards_compatibility import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .quantity import Quantity
     from .unit import Unit, DataUnit
-    from .type_aliases import UfuncInput, ArrayIndex
+    from .type_aliases import UfuncInput, ArrayIndex, ArraySlice
 
 
 class Array(NDArrayOperatorsMixin):
@@ -84,8 +83,12 @@ class Array(NDArrayOperatorsMixin):
         """
 
         numpy_data = np.asarray(data)
+
         if not issubclass(numpy_data.dtype.type, np.number):
-            raise TypeError(f'Input data must be numeric. Got "{repr(numpy_data)}"')
+            raise NonNumericDataException(
+                f"Can only create a `yunit.Array` with numeric data. "
+                f'Instead got "{repr(numpy_data)}".'
+            )
 
         if data_are_given_in_display_units:
             self.data = numpy_data * display_unit.scale
@@ -138,7 +141,7 @@ class Array(NDArrayOperatorsMixin):
         ufunc: np.ufunc,
         method: str,
         *inputs: Tuple["UfuncInput", ...],
-        **ufunc_kwargs: Dict[str, Any],
+        **kwargs,
     ):
         from ..ufunc_handling import ufunc_handlers, UfuncArgs
 
@@ -147,7 +150,7 @@ class Array(NDArrayOperatorsMixin):
 
         if method != "__call__":  # method = "reduce", "accumulate", ...
             raise NotImplementedError(
-                f'yunit objects do not yet support "{method}" ufuncs. '
+                f'Yunit objects do not yet support "{method}" ufuncs. '
                 + self._DIY_help_text
             )
 
@@ -155,11 +158,11 @@ class Array(NDArrayOperatorsMixin):
 
         if not handler:
             raise NotImplementedError(
-                f"yunit objects do not yet support the `{ufunc.__name__}` operation. "
+                f"Yunit objects do not yet support the `{ufunc.__name__}` operation. "
                 + self._DIY_help_text
             )
 
-        args = UfuncArgs(ufunc, method, inputs, ufunc_kwargs)
+        args = UfuncArgs(ufunc, method, inputs, kwargs)
         output = handler(args)
         return output
 
@@ -183,14 +186,14 @@ class Array(NDArrayOperatorsMixin):
     def __len__(self) -> int:
         return len(self.data)
 
-    def __getitem__(self, index: "ArrayIndex") -> Union["Array", "Quantity"]:
+    def __getitem__(self, index: "ArrayIndex") -> "ArraySlice":
         from .util import create_Array_or_Quantity
 
         data_slice: np.ndarray = self.data[index]
         output = create_Array_or_Quantity(data_slice, self.display_unit, self.name)
         return output
 
-    def __setitem__(self, index: "ArrayIndex", value: "Array"):
+    def __setitem__(self, index: "ArrayIndex", value: "ArraySlice"):
         from .unit import Unit, IncompatibleUnitsError
         from .util import as_array
 
@@ -208,3 +211,15 @@ class Array(NDArrayOperatorsMixin):
             )
 
         self.data[index] = value_as_array.data
+
+    @property
+    def shape(self) -> Tuple[int, ...]:
+        return self.data.shape
+
+    @property
+    def ndim(self) -> int:
+        return self.data.ndim
+
+
+class NonNumericDataException(Exception):
+    pass
