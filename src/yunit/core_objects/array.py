@@ -6,8 +6,9 @@ from numpy.lib.mixins import NDArrayOperatorsMixin
 from ..backwards_compatibility import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from .quantity import Quantity
     from .unit import Unit, DataUnit
-    from . import YunitObject
+    from .type_aliases import UfuncInput, ArrayIndex
 
 
 class Array(NDArrayOperatorsMixin):
@@ -82,14 +83,14 @@ class Array(NDArrayOperatorsMixin):
                     no conversion is done.
         """
 
-        data_as_array = np.asarray(data)
-        if not issubclass(data_as_array.dtype.type, np.number):
-            raise TypeError(f'Input data must be numeric. Got "{repr(data_as_array)}"')
+        numpy_data = np.asarray(data)
+        if not issubclass(numpy_data.dtype.type, np.number):
+            raise TypeError(f'Input data must be numeric. Got "{repr(numpy_data)}"')
 
         if data_are_given_in_display_units:
-            self.data = data_as_array * display_unit.scale
+            self.data = numpy_data * display_unit.scale
         else:
-            self.data = data_as_array
+            self.data = numpy_data
 
         self.display_unit = display_unit
         self.name = name
@@ -116,8 +117,8 @@ class Array(NDArrayOperatorsMixin):
 
     #
     #
-    # --------------------------------------------
-    #
+    # ----------
+    # Arithmetic
 
     # See "Writing custom array containers"[1] from the NumPy manual for info on the
     # below `__array_ufunc__` and `__array_function__` methods.
@@ -173,3 +174,37 @@ class Array(NDArrayOperatorsMixin):
         "You can get the bare numeric data (a plain NumPy array) "
         "via `array.data`, and work with it manually."
     )
+
+    #
+    #
+    # ---------------
+    # Array behaviour
+
+    def __len__(self) -> int:
+        return len(self.data)
+
+    def __getitem__(self, index: "ArrayIndex") -> Union["Array", "Quantity"]:
+        from .util import create_Array_or_Quantity
+
+        data_slice: np.ndarray = self.data[index]
+        output = create_Array_or_Quantity(data_slice, self.display_unit, self.name)
+        return output
+
+    def __setitem__(self, index: "ArrayIndex", value: "Array"):
+        from .unit import Unit, IncompatibleUnitsError
+        from .util import as_array
+
+        if isinstance(value, Unit):
+            raise ValueError(
+                f'Cannot set Array element to a bare Unit. (Value was "{value}")'
+            )
+
+        value_as_array = as_array(value)
+
+        if value_as_array.data_unit != self.data_unit:
+            raise IncompatibleUnitsError(
+                f'Units are incompatible between Array "{self}"'
+                f'and assigned value "{value_as_array}".'
+            )
+
+        self.data[index] = value_as_array.data

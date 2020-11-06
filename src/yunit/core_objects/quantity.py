@@ -57,3 +57,10 @@ class Quantity(Array):
         "You can get the bare numeric value via `quantity.value` "
         "and work with it manually."
     )
+
+    def __bool__(self):
+        # Python implicit truth value testing (`if quantity:` or `if unit:`)
+        # would check whether `__len__` is 0; but `__len__` is not defined
+        # for 0-dimensional arrays. Hence, avoid that `__len__` check by defining
+        # `__bool__` (which gets checked before `__len__`).
+        return True
