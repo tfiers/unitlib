@@ -1,4 +1,4 @@
-import matplotlib.units as mpl_custom_types
+import matplotlib.units as mpl_custom_classes
 import numpy as np
 from matplotlib.axis import Axis
 
@@ -10,7 +10,7 @@ import yunit
 # `mpl_custom_types`.
 
 
-class ArrayPlotInterface(mpl_custom_types.ConversionInterface):
+class ArrayPlotInterface(mpl_custom_classes.ConversionInterface):
     @staticmethod
     def convert(obj: yunit.Array, unit: yunit.Unit, axis: Axis) -> np.ndarray:
         """
@@ -25,8 +25,8 @@ class ArrayPlotInterface(mpl_custom_types.ConversionInterface):
         return obj.display_unit
 
     @staticmethod
-    def axisinfo(unit: yunit.Unit, axis: Axis) -> mpl_custom_types.AxisInfo:
-        return mpl_custom_types.AxisInfo(label=unit.name)
+    def axisinfo(unit: yunit.Unit, axis: Axis) -> mpl_custom_classes.AxisInfo:
+        return mpl_custom_classes.AxisInfo(label=unit.name)
 
 
-mpl_custom_types.registry[yunit.Array] = ArrayPlotInterface()
+mpl_custom_classes.registry[yunit.Array] = ArrayPlotInterface()
