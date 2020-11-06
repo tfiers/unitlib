@@ -4,7 +4,7 @@ from typing import Optional
 
 import numpy as np
 
-from ._2_quantity import Quantity
+from .quantity import Quantity
 from ..backwards_compatibility import TYPE_CHECKING
 from ..prefixes import Prefix
 

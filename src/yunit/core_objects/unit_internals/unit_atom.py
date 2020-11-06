@@ -1,5 +1,5 @@
-from ._2_powered_unit_atom import PoweredUnitAtom, PoweredDataUnitAtom
-from .._3_unit import DataUnit
+from .powered_unit_atom import PoweredUnitAtom, PoweredDataUnitAtom
+from ..unit import DataUnit
 
 
 class UnitAtom(PoweredUnitAtom):

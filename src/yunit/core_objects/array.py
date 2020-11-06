@@ -7,7 +7,7 @@ from ..backwards_compatibility import TYPE_CHECKING
 from ..type_aliases import NDArrayLike
 
 if TYPE_CHECKING:
-    from ._3_unit import Unit, DataUnit
+    from .unit import Unit, DataUnit
     from . import YunitObject
 
 

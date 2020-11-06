@@ -2,12 +2,12 @@ from typing import Optional
 
 import numpy as np
 
-from ._1_array import Array
+from .array import Array
 from ..type_aliases import Scalar
 from ..backwards_compatibility import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ._3_unit import Unit
+    from .unit import Unit
 
 
 class Quantity(Array):
