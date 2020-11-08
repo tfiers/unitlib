@@ -199,10 +199,17 @@ class Array(NDArrayOperatorsMixin):
 
         if isinstance(value, Unit):
             raise ValueError(
-                f'Cannot set Array element to a bare Unit. (Value was "{value}")'
+                f"Cannot set Array element to a bare Unit "
+                f'(assigned value was "{value}").'
             )
 
-        value_as_array = as_array(value)
+        try:
+            value_as_array = as_array(value)
+
+        except NonNumericDataException as exception:
+            raise NonNumericDataException(
+                "Can only assign numeric data to Array."
+            ) from exception
 
         if value_as_array.data_unit != self.data_unit:
             raise IncompatibleUnitsError(
@@ -221,5 +228,5 @@ class Array(NDArrayOperatorsMixin):
         return self.data.ndim
 
 
-class NonNumericDataException(Exception):
+class NonNumericDataException(TypeError):
     pass
