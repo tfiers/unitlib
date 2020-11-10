@@ -86,7 +86,7 @@ class Array(NDArrayOperatorsMixin):
 
         if not issubclass(numpy_data.dtype.type, np.number):
             raise NonNumericDataException(
-                f"Can only create a `yunit.Array` with numeric data. "
+                f"Can only create a `unitlib.Array` with numeric data. "
                 f'Instead got "{repr(numpy_data)}".'
             )
 
@@ -150,7 +150,7 @@ class Array(NDArrayOperatorsMixin):
 
         if method != "__call__":  # method = "reduce", "accumulate", ...
             raise NotImplementedError(
-                f'Yunit objects do not yet support "{method}" ufuncs. '
+                f'Unitlib objects do not yet support "{method}" ufuncs. '
                 + self._DIY_help_text
             )
 
@@ -158,7 +158,7 @@ class Array(NDArrayOperatorsMixin):
 
         if not handler:
             raise NotImplementedError(
-                f"Yunit objects do not yet support the `{ufunc.__name__}` operation. "
+                f"Unitlib objects do not yet support the `{ufunc.__name__}` operation. "
                 + self._DIY_help_text
             )
 
@@ -169,7 +169,7 @@ class Array(NDArrayOperatorsMixin):
     # NumPy methods (mean, sum, linspace, ...)
     def __array_function__(self, func, _types, _args, _kwargs):
         raise NotImplementedError(
-            f"yunit objects do not yet support being used with function"
+            f"Unitlib objects do not yet support being used with function"
             f"`{func.__name__}`. {self._DIY_help_text}"
         )
 

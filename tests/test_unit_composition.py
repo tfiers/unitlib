@@ -1,8 +1,8 @@
 from numpy import allclose as numeric_equals
 
-from yunit import Unit
-from yunit.core_objects.unit_internals import PoweredUnitAtom
-from yunit.prefixes import milli, nano
+from unitlib import Unit
+from unitlib.core_objects.unit_internals import PoweredUnitAtom
+from unitlib.prefixes import milli, nano
 
 
 volt = Unit.define("V")

@@ -3,11 +3,11 @@ from typing import Union, Optional
 import numpy as np
 
 from . import Array, Quantity, Unit, dimensionless
-from .type_aliases import YunitObject
+from .type_aliases import UnitlibObject
 from ..type_aliases import NDArrayLike
 
 
-def as_array(x: Union[NDArrayLike, YunitObject]) -> YunitObject:
+def as_array(x: Union[NDArrayLike, UnitlibObject]) -> UnitlibObject:
     if isinstance(x, Array):
         return x
     else:  # `x` is purely numeric (scalar or array-like).

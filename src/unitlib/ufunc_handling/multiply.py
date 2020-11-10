@@ -10,8 +10,8 @@ Examples:
 
 import numpy as np
 
-from yunit.core_objects import Unit
-from yunit.core_objects.unit_internals import CompoundUnit
+from unitlib.core_objects import Unit
+from unitlib.core_objects.unit_internals import CompoundUnit
 from .support import make_binary_ufunc_output, UfuncOutput, implements, UfuncArgs
 
 

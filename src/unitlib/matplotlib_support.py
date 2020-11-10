@@ -2,7 +2,7 @@ import matplotlib.units as mpl_custom_classes
 import numpy as np
 from matplotlib.axis import Axis
 
-import yunit
+import unitlib
 
 
 # The matplotlib module of interest is called `units`; but really it is used to allow
@@ -12,7 +12,7 @@ import yunit
 
 class ArrayPlotInterface(mpl_custom_classes.ConversionInterface):
     @staticmethod
-    def convert(obj: yunit.Array, unit: yunit.Unit, axis: Axis) -> np.ndarray:
+    def convert(obj: unitlib.Array, unit: unitlib.Unit, axis: Axis) -> np.ndarray:
         """
         `unit` argument is specified by the user via the (not well-documented) options
         `xaxis.set_units()` or `plot(..., xunits=...)`. When these are not set, this
@@ -21,12 +21,12 @@ class ArrayPlotInterface(mpl_custom_classes.ConversionInterface):
         return obj.data_in_display_units
 
     @staticmethod
-    def default_units(obj: yunit.Array, axis: Axis) -> yunit.Unit:
+    def default_units(obj: unitlib.Array, axis: Axis) -> unitlib.Unit:
         return obj.display_unit
 
     @staticmethod
-    def axisinfo(unit: yunit.Unit, axis: Axis) -> mpl_custom_classes.AxisInfo:
+    def axisinfo(unit: unitlib.Unit, axis: Axis) -> mpl_custom_classes.AxisInfo:
         return mpl_custom_classes.AxisInfo(label=unit.name)
 
 
-mpl_custom_classes.registry[yunit.Array] = ArrayPlotInterface()
+mpl_custom_classes.registry[unitlib.Array] = ArrayPlotInterface()

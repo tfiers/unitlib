@@ -15,7 +15,7 @@ But not:
 
 import numpy as np
 
-from yunit.core_objects import Unit, dimensionless
+from unitlib.core_objects import Unit, dimensionless
 from .support import make_binary_ufunc_output, implements, UfuncOutput, UfuncArgs
 
 
@@ -35,7 +35,7 @@ def power(ufunc_args: UfuncArgs) -> UfuncOutput:
             f"Can only raise to scalar powers "
             f'(power "{inputs.right_operand}" does not have size 1).'
         )
-        # An sequence with different units per element is not supported by yunit.
+        # An sequence with different units per element is not supported by unitlib.
 
     if not issubclass(inputs.right_array.data.dtype.type, np.integer):
         raise NotImplementedError(

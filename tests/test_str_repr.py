@@ -1,4 +1,4 @@
-from yunit import Quantity, Unit
+from unitlib import Quantity, Unit
 
 
 def test_unit_str_repr():

@@ -1,13 +1,13 @@
 from setuptools import find_packages, setup
 
 
-GITHUB_URL = "https://github.com/tfiers/yunit"
+GITHUB_URL = "https://github.com/tfiers/unitlib"
 
 with open("ReadMe.md", mode="r", encoding="utf-8") as f:
     readme = f.read()
 
 setup(
-    name="yunit",
+    name="unitlib",
     description="📐 Physical units for NumPy arrays ⏱ Fast • Simple • High voltage",
     author="Tomas Fiers",
     author_email="tomas.fiers@gmail.com",

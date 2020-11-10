@@ -1,7 +1,7 @@
 # Tests
 
 The Python files in this directory contain a range of unit tests. These are functions
-(recognized by their name, which start in `test_`) which verify that all `yunit`
+(recognized by their name, which start in `test_`) which verify that all `unitlib`
 features work as expected, and so ensure that code updates don't introduce any
 regressions.
 
@@ -11,7 +11,7 @@ on every push of code to GitHub, on a range of different Python versions and OS'
 
 ## How to run tests locally
 
-1. Install your local version of the `yunit` package, by running,
+1. Install your local version of the `unitlib` package, by running,
    in the project root dir:
    ```
    pip install -e .

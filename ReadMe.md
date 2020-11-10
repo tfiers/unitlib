@@ -1,4 +1,4 @@
-# 📐 yunit
+# 📐 unitlib
 
 - Physical units for NumPy arrays.
 - Fast, simple, high voltage ⚡
@@ -7,7 +7,7 @@
 
 ## Why
 
-`yunit` was born out of frustration with other Python unit packages.
+`unitlib` was born out of frustration with other Python unit packages.
 Those packages work well for toy experiments, but they greatly slow down your code.
 This makes their use unfeasible for even moderate scale scientific simulations.
 
@@ -16,13 +16,13 @@ This makes their use unfeasible for even moderate scale scientific simulations.
 ## Installation
 
 ```
-$ pip install yunit
+$ pip install unitlib
 ```
 This will get you the
 
-[![latest release on PyPI](https://img.shields.io/pypi/v/yunit.svg?label=latest%20release%20on%20PyPI:)](https://pypi.python.org/pypi/yunit/)
+[![latest release on PyPI](https://img.shields.io/pypi/v/unitlib.svg?label=latest%20release%20on%20PyPI:)](https://pypi.python.org/pypi/unitlib/)
 
-`yunit` is tested on Python versions 3.9 down to 3.6, on Windows, Linux and MacOS.
+`unitlib` is tested on Python versions 3.9 down to 3.6, on Windows, Linux and MacOS.
 
 
 
@@ -30,7 +30,7 @@ This will get you the
 
 The following indicates whether the latest commit on the main branch passes all tests:
 
-[![CI status](https://github.com/tfiers/yunit/workflows/CI/badge.svg)](https://github.com/tfiers/yunit/actions)
+[![CI status](https://github.com/tfiers/unitlib/workflows/CI/badge.svg)](https://github.com/tfiers/unitlib/actions)
 
-(This only pertains to development code. The `yunit` versions on PyPI
+(This only pertains to development code. The `unitlib` versions on PyPI
 pass all tests on release, of course).

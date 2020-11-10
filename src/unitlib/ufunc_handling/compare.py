@@ -11,8 +11,8 @@ Examples:
 
 import numpy as np
 
-from yunit.core_objects import Unit, IncompatibleUnitsError
-from yunit.core_objects.array import NonNumericDataException
+from unitlib.core_objects import Unit, IncompatibleUnitsError
+from unitlib.core_objects.array import NonNumericDataException
 from .support import implements, UfuncOutput, UfuncArgs
 
 equality_comparators = (
@@ -75,5 +75,5 @@ def compare(ufunc_args: UfuncArgs) -> UfuncOutput:
         )
         return np.logical_and(data_comparison_result, unit_comparison_result)
         # Note that there are no in-place versions of comparator dunders (i.e. __lt__
-        # etc). They wouldn't make sense anyway: the type changes from `yunit.Array` to
+        # etc). They wouldn't make sense anyway: the type changes from `unitlib.Array` to
         # `np.ndarray`.

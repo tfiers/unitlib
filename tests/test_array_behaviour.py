@@ -1,8 +1,8 @@
 import pytest
 
-from yunit import Unit
-from yunit.core_objects import IncompatibleUnitsError
-from yunit.prefixes import milli
+from unitlib import Unit
+from unitlib.core_objects import IncompatibleUnitsError
+from unitlib.prefixes import milli
 
 volt = Unit.define("V")
 mV = Unit.from_prefix(milli, volt)

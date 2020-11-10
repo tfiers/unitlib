@@ -14,9 +14,9 @@ Fixed by not using a custom `PoweredUnitAtom.__new__`, but rather placing its lo
 
 import numpy as np
 
-from yunit import Unit
-from yunit.core_objects.unit_internals import PoweredUnitAtom
-from yunit.prefixes import milli
+from unitlib import Unit
+from unitlib.core_objects.unit_internals import PoweredUnitAtom
+from unitlib.prefixes import milli
 
 volt = Unit.define("V")
 mV = Unit.from_prefix(milli, volt)

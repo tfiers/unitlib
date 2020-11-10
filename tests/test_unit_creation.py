@@ -1,5 +1,5 @@
-from yunit import Unit
-from yunit.prefixes import milli
+from unitlib import Unit
+from unitlib.prefixes import milli
 
 
 def test_from_prefix():

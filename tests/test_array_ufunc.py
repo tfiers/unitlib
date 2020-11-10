@@ -2,9 +2,9 @@ import numpy as np
 import pytest
 from numpy import allclose as numeric_equals
 
-from yunit import Array, Quantity, Unit
-from yunit.core_objects.unit_internals import PoweredUnitAtom
-from yunit.prefixes import milli, nano
+from unitlib import Array, Quantity, Unit
+from unitlib.core_objects.unit_internals import PoweredUnitAtom
+from unitlib.prefixes import milli, nano
 
 volt = Unit.define("V")
 mV = Unit.from_prefix(milli, volt)

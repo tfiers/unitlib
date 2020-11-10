@@ -12,7 +12,7 @@ Examples:
 
 import numpy as np
 
-from yunit.core_objects import Unit
+from unitlib.core_objects import Unit
 from .support import UfuncOutput, implements, UfuncArgs
 
 

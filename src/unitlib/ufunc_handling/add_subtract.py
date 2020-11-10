@@ -16,7 +16,7 @@ Note that order of operands doesn't matter for unit checks.
 
 import numpy as np
 
-from yunit.core_objects import Unit, IncompatibleUnitsError
+from unitlib.core_objects import Unit, IncompatibleUnitsError
 from .support import make_binary_ufunc_output, UfuncOutput, implements, UfuncArgs
 
 

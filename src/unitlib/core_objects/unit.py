@@ -140,7 +140,7 @@ class Unit(Quantity, ABC):
         return self
 
     _DIY_help_text = (
-        "If you're working with yunit Arrays or Quantities, you can get their "
+        "If you're working with unitlib Arrays or Quantities, you can get their "
         "bare numeric values (plain NumPy arrays or Python scalars) "
         "via `array.data` or `quantity.value`, and work with them manually."
     )
