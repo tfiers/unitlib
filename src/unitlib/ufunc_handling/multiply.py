@@ -10,15 +10,30 @@ Examples:
 
 import numpy as np
 
-from unitlib.core_objects import Unit
-from unitlib.core_objects.unit_internals import CompoundUnit
+from unitlib.core_objects import Unit, NonNumericDataException
+from unitlib.core_objects.unit_internals import CompoundUnit, DataUnitAtom
+from unitlib.prefixes import Prefix
 from .support import make_binary_ufunc_output, UfuncOutput, implements, UfuncArgs
 
 
 @implements([np.multiply])
 def multiply(ufunc_args: UfuncArgs) -> UfuncOutput:
 
-    inputs = ufunc_args.parse_binary_inputs()
+    try:
+        inputs = ufunc_args.parse_binary_inputs()
+    except NonNumericDataException as exception:
+        if isinstance(ufunc_args.inputs[0], Prefix):
+            # Shorthand to create a new prefixed unit. Example: `mV = milli * volt`.
+            left_operand, right_operand = ufunc_args.inputs
+            if isinstance(right_operand, DataUnitAtom):
+                return Unit.from_prefix(left_operand, right_operand)
+            else:
+                raise ValueError(
+                    "Can only create prefixed units from `DataUnitAtom`s. "
+                    f"(Got {repr(right_operand)})."
+                )
+        else:
+            raise exception
 
     new_display_unit = CompoundUnit.squeeze(
         [
