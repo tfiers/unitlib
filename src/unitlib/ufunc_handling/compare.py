@@ -11,8 +11,7 @@ Examples:
 
 import numpy as np
 
-from unitlib.core_objects import Unit, IncompatibleUnitsError
-from unitlib.core_objects.array import NonNumericDataException
+from unitlib.core_objects import Unit, IncompatibleUnitsError, NonNumericDataException
 from .support import implements, UfuncOutput, UfuncArgs
 
 equality_comparators = (
