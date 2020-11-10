@@ -35,11 +35,10 @@ def compare(ufunc_args: UfuncArgs) -> UfuncOutput:
         inputs = ufunc_args.parse_binary_inputs()
     except NonNumericDataException as exception:
         # One of the operands is e.g. `None`, as in `8 mV == None`.
-        if ufunc_args.ufunc in equality_comparators:
-            if ufunc_args.ufunc == np.equal:
-                return False
-            elif ufunc_args.ufunc == np.not_equal:
-                return True
+        if ufunc_args.ufunc == np.equal:
+            return False
+        elif ufunc_args.ufunc == np.not_equal:
+            return True
         else:
             raise exception
 
