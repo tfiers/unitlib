@@ -1,4 +1,4 @@
-# 📐 unitlib
+# 📐unitlib
 
 - Physical units for NumPy arrays.
 - Fast, simple, high voltage ⚡
