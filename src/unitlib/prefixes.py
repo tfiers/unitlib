@@ -6,7 +6,7 @@ from dataclasses import dataclass
 class Prefix(ABC):
     symbol: str
     power: int
-    base = None
+    base = ...
 
     @property
     def factor(self):
