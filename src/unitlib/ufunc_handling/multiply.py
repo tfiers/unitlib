@@ -11,7 +11,7 @@ Examples:
 import numpy as np
 
 from unitlib.core_objects import Unit, NonNumericDataException
-from unitlib.core_objects.unit_internals import CompoundUnit, DataUnitAtom
+from unitlib.core_objects.unit_internals import CompoundUnit, DataUnitAtom, UnitAtom
 from unitlib.prefixes import Prefix
 from .support import make_binary_ufunc_output, UfuncOutput, implements, UfuncArgs
 
@@ -22,11 +22,17 @@ def multiply(ufunc_args: UfuncArgs) -> UfuncOutput:
     try:
         inputs = ufunc_args.parse_binary_inputs()
     except NonNumericDataException as exception:
-        if isinstance(ufunc_args.inputs[0], Prefix):
-            # Shorthand to create a new prefixed unit. Example: `mV = milli * volt`.
-            left_operand, right_operand = ufunc_args.inputs
+        left_operand, right_operand = ufunc_args.inputs
+        if isinstance(left_operand, Prefix):
+            prefix = left_operand
+            # Syntax to create a new prefixed unit. Example: `mV = milli * volt`.
             if isinstance(right_operand, DataUnitAtom):
-                return Unit.from_prefix(left_operand, right_operand)
+                data_unit = right_operand
+                return UnitAtom(
+                    name=f"{prefix.symbol}{data_unit.name}",
+                    data_unit=data_unit,
+                    scale=prefix.factor,
+                )
             else:
                 raise ValueError(
                     "Can only create prefixed units from `DataUnitAtom`s. "

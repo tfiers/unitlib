@@ -19,7 +19,7 @@ from unitlib.core_objects.unit_internals import PoweredUnitAtom
 from unitlib.prefixes import milli
 
 volt = Unit.define("V")
-mV = Unit.from_prefix(milli, volt)
+mV = milli * volt
 
 
 def check(mV2: PoweredUnitAtom):

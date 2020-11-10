@@ -6,7 +6,6 @@ import numpy as np
 
 from .quantity import Quantity
 from ..backwards_compatibility import TYPE_CHECKING
-from ..prefixes import Prefix
 
 if TYPE_CHECKING:
     from .unit_internals import UnitAtom, DataUnitAtom
@@ -116,15 +115,6 @@ class Unit(Quantity, ABC):
         else:
             return DataUnitAtom(name)
 
-    @staticmethod
-    def from_prefix(prefix: Prefix, data_unit: "DataUnitAtom") -> "UnitAtom":
-        from .unit_internals import UnitAtom
-
-        return UnitAtom(
-            name=f"{prefix.symbol}{data_unit.name}",
-            data_unit=data_unit,
-            scale=prefix.factor,
-        )
 
     #
     #

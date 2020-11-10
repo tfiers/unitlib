@@ -6,15 +6,15 @@ from unitlib.prefixes import milli, nano
 
 
 volt = Unit.define("V")
-mV = Unit.from_prefix(milli, volt)
-nV = Unit.from_prefix(nano, volt)
+mV = milli * volt
+nV = nano * volt
 
 second = Unit.define("s")
-ms = Unit.from_prefix(milli, second)
+ms = milli * second
 minute = Unit.define("min", data_unit=second, scale=60)
 
 siemens = Unit.define("S")
-nS = Unit.from_prefix(nano, siemens)
+nS = nano * siemens
 
 
 def test_mul():

@@ -5,7 +5,7 @@ from unitlib.core_objects import IncompatibleUnitsError
 from unitlib.prefixes import milli
 
 volt = Unit.define("V")
-mV = Unit.from_prefix(milli, volt)
+mV = milli * volt
 siemens = Unit.define("S")
 
 
