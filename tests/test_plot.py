@@ -13,14 +13,21 @@ mV = Unit.from_prefix(milli, volt)
 x = np.linspace(0, 10) * ms
 y = np.random.randn(len(x)) * mV
 
+x = np.linspace(0, 10) * ms
+x.name = "Time"
+
+y = np.random.randn(len(x)) * mV
+y.name = "Membrane potential"
+
 fig, ax = plt.subplots()
 ax: Axes
 ax.plot(x, y)
 
+
 def test_axlabels():
-    assert ax.get_xlabel() == 'ms'
-    assert ax.get_ylabel() == 'mV'
+    assert ax.get_xlabel() == "Time (ms)"
+    assert ax.get_ylabel() == "Membrane potential (mV)"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     plt.show()
