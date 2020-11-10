@@ -1,5 +1,11 @@
-from .powered_unit_atom import PoweredUnitAtom, PoweredDataUnitAtom
+from typing import Optional
+
+from unitlib.backwards_compatibility import TYPE_CHECKING
+from .powered_unit_atom import PoweredUnitAtom
 from ..unit import DataUnit
+
+if TYPE_CHECKING:
+    from unitlib import Quantity
 
 
 class UnitAtom(PoweredUnitAtom):
@@ -50,6 +56,18 @@ class DataUnitAtom(DataUnit, UnitAtom):
         return hash(self.name)
 
 
-dimensionless = DataUnitAtom("<dimensionless>")
+def define_unit(name: str, relation: Optional["Quantity"] = None):
+
+    if relation:
+        return UnitAtom(
+            name,
+            data_unit=relation.data_unit,
+            scale=float(relation.data),
+        )
+    else:
+        return DataUnitAtom(name)
+
+
+dimensionless = define_unit("<dimensionless>")
 #   We give this one a real name (instead of just the empty string) to make debugging
 #   easier.

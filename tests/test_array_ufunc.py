@@ -2,19 +2,19 @@ import numpy as np
 import pytest
 from numpy import allclose as numeric_equals
 
-from unitlib import Array, Quantity, Unit
+from unitlib import Array, Quantity, Unit, define_unit
 from unitlib.core_objects.unit_internals import PoweredUnitAtom
 from unitlib.prefixes import milli, nano
 
-volt = Unit("V")
+volt = define_unit("V")
 mV = milli * volt
 nV = nano * volt
 
-second = Unit("s")
+second = define_unit("s")
 ms = milli * second
-minute = Unit("min", data_unit=second, scale=60)
+minute = define_unit("min", 60 * second)
 
-siemens = Unit("S")
+siemens = define_unit("S")
 nS = nano * siemens
 
 

@@ -18,10 +18,6 @@ class CompoundUnit(Unit):
         components: Tuple[PoweredUnitAtom, ...]
     """
 
-    # Reset custom `__new__` of `Unit`.
-    def __new__(cls, *args, **kwargs):
-        return object.__new__(cls)
-
     def __init__(self, components: Tuple["PoweredUnitAtom", ...]):
         self.components = components
 

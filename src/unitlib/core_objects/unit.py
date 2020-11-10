@@ -1,14 +1,9 @@
 from abc import ABC, abstractproperty, abstractmethod
 from numbers import Number
-from typing import Optional
 
 import numpy as np
 
 from .quantity import Quantity
-from ..backwards_compatibility import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from .unit_internals import UnitAtom, DataUnitAtom
 
 
 class Unit(Quantity, ABC):
@@ -97,23 +92,6 @@ class Unit(Quantity, ABC):
     def _raised_to(self, power: int) -> "Unit":
         ...  # For subclasses to implement.
 
-    #
-    #
-    # -----------------
-    # Unit creation API
-
-    def __new__(
-        cls,
-        name: str,
-        data_unit: Optional["DataUnitAtom"] = None,
-        scale: Optional[float] = 1,
-    ):
-        from .unit_internals import UnitAtom, DataUnitAtom
-
-        if data_unit:
-            return UnitAtom(name, data_unit, scale)
-        else:
-            return DataUnitAtom(name)
 
     #
     #

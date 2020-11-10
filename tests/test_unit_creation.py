@@ -1,17 +1,17 @@
-from unitlib import Unit
+from unitlib import define_unit
 from unitlib.prefixes import milli
 
 
 def test_new():
-    second = Unit("s")
-    minute = Unit("min", data_unit=second, scale=60)
+    second = define_unit("s")
+    minute = define_unit("min", 60 * second)
 
     assert minute.data_unit == second
     assert minute.scale == 60
 
 
 def test_prefix_mul():
-    volt = Unit("V")
+    volt = define_unit("V")
     mV = milli * volt
 
     assert mV.name == "mV"

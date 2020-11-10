@@ -2,12 +2,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.axes import Axes
 
-from unitlib import Unit
+from unitlib import define_unit
 from unitlib.prefixes import milli
 
-second = Unit("s")
+second = define_unit("s")
 ms = milli * second
-volt = Unit("V")
+volt = define_unit("V")
 mV = milli * volt
 
 x = np.linspace(0, 10) * ms

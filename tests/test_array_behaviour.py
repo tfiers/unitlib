@@ -1,12 +1,12 @@
 import pytest
 
-from unitlib import Unit
+from unitlib import define_unit
 from unitlib.core_objects import IncompatibleUnitsError
 from unitlib.prefixes import milli
 
-volt = Unit("V")
+volt = define_unit("V")
 mV = milli * volt
-siemens = Unit("S")
+siemens = define_unit("S")
 
 
 array_1D = [5, 3, 5.2] * mV

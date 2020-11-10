@@ -14,11 +14,11 @@ Fixed by not using a custom `PoweredUnitAtom.__new__`, but rather placing its lo
 
 import numpy as np
 
-from unitlib import Unit
+from unitlib import define_unit
 from unitlib.core_objects.unit_internals import PoweredUnitAtom
 from unitlib.prefixes import milli
 
-volt = Unit("V")
+volt = define_unit("V")
 mV = milli * volt
 
 

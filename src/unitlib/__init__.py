@@ -1,4 +1,4 @@
-from .core_objects import Unit, Quantity, Array
+from .core_objects import Unit, Quantity, Array, define_unit
 
 
 try:
