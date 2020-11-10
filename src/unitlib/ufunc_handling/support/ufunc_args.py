@@ -32,8 +32,7 @@ class UfuncArgs:
             left, right = self.inputs
             left_array = as_array(left)
             right_array = as_array(right)
-            return BinaryUfuncInputs(left, right, left_array, right_array
-                                     )
+            return BinaryUfuncInputs(left, right, left_array, right_array)
         except NonNumericDataException as exception:
             raise NonNumericDataException(
                 f"Cannot perform `{self.ufunc}` operation with non-numeric data."
