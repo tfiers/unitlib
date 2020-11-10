@@ -5,9 +5,9 @@ from matplotlib.axes import Axes
 from unitlib import Unit
 from unitlib.prefixes import milli
 
-second = Unit.define("s")
+second = Unit("s")
 ms = milli * second
-volt = Unit.define("V")
+volt = Unit("V")
 mV = milli * volt
 
 x = np.linspace(0, 10) * ms

@@ -102,8 +102,8 @@ class Unit(Quantity, ABC):
     # -----------------
     # Unit creation API
 
-    @staticmethod
-    def define(
+    def __new__(
+        cls,
         name: str,
         data_unit: Optional["DataUnitAtom"] = None,
         scale: Optional[float] = 1,
@@ -114,7 +114,6 @@ class Unit(Quantity, ABC):
             return UnitAtom(name, data_unit, scale)
         else:
             return DataUnitAtom(name)
-
 
     #
     #

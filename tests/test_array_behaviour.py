@@ -4,9 +4,9 @@ from unitlib import Unit
 from unitlib.core_objects import IncompatibleUnitsError
 from unitlib.prefixes import milli
 
-volt = Unit.define("V")
+volt = Unit("V")
 mV = milli * volt
-siemens = Unit.define("S")
+siemens = Unit("S")
 
 
 array_1D = [5, 3, 5.2] * mV

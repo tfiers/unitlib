@@ -5,15 +5,15 @@ from unitlib.core_objects.unit_internals import PoweredUnitAtom
 from unitlib.prefixes import milli, nano
 
 
-volt = Unit.define("V")
+volt = Unit("V")
 mV = milli * volt
 nV = nano * volt
 
-second = Unit.define("s")
+second = Unit("s")
 ms = milli * second
-minute = Unit.define("min", data_unit=second, scale=60)
+minute = Unit("min", data_unit=second, scale=60)
 
-siemens = Unit.define("S")
+siemens = Unit("S")
 nS = nano * siemens
 
 
