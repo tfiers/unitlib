@@ -143,7 +143,7 @@ class Array(NDArrayOperatorsMixin):
         *inputs: Tuple["UfuncInput", ...],
         **kwargs,
     ):
-        from ..ufunc_handling import ufunc_handlers, UfuncArgs
+        from ..operations import ufunc_handlers, UfuncArgs
 
         # Docs for __array_ufunc__:
         # https://numpy.org/doc/stable/reference/arrays.classes.html#numpy.class.__array_ufunc__
