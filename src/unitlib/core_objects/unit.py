@@ -78,20 +78,19 @@ class Unit(Quantity, ABC):
     def __format__(self, format_spec: str = "") -> str:
         return str(self)
 
+    #
+    #
+    # ---------
+    # Internals
+
     @abstractmethod
     def __hash__(self) -> int:
         """ Used for unit (in)equality checks. """
         ...  # For subclasses to implement.
 
-    #
-    #
-    # -------------------
-    # Unit exponentiation
-
     @abstractmethod
     def _raised_to(self, power: int) -> "Unit":
         ...  # For subclasses to implement.
-
 
     #
     #
