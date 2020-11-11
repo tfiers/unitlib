@@ -3,7 +3,7 @@ from typing import Optional, Tuple
 import numpy as np
 from numpy.lib.mixins import NDArrayOperatorsMixin
 
-from ..backwards_compatibility import TYPE_CHECKING
+from unitlib.support.backwards_compatibility import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .unit import Unit, DataUnit

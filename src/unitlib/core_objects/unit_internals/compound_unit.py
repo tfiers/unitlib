@@ -2,8 +2,8 @@ from collections import defaultdict
 from itertools import chain
 from typing import Iterable, Dict, Tuple
 
-from ..unit import DataUnit, Unit
-from ...backwards_compatibility import prod, TYPE_CHECKING
+from unitlib.core_objects.unit import DataUnit, Unit
+from unitlib.support.backwards_compatibility import prod, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .powered_unit_atom import PoweredUnitAtom, PoweredDataUnitAtom

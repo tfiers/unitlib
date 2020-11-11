@@ -1,8 +1,8 @@
 from typing import Optional
 
-from unitlib.backwards_compatibility import TYPE_CHECKING
+from unitlib.core_objects.unit import DataUnit
+from unitlib.support.backwards_compatibility import TYPE_CHECKING
 from .powered_unit_atom import PoweredUnitAtom
-from ..unit import DataUnit
 
 if TYPE_CHECKING:
     from unitlib import Quantity

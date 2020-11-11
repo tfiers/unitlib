@@ -3,8 +3,8 @@ from typing import Optional
 import numpy as np
 
 from .array import Array
-from ..type_aliases import Scalar
-from ..backwards_compatibility import TYPE_CHECKING
+from unitlib.support.type_aliases import Scalar
+from unitlib.support.backwards_compatibility import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .unit import Unit

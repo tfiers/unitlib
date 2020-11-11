@@ -1,7 +1,7 @@
 from dataclasses import dataclass, fields
 from typing import Dict, Union
 
-from . import Array, Quantity
+from unitlib import Array, Quantity
 
 
 @dataclass

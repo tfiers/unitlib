@@ -3,8 +3,8 @@ from typing import Union, Optional
 import numpy as np
 
 from unitlib.core_objects import Array, Quantity, Unit, dimensionless
+from unitlib.support.type_aliases import NDArrayLike
 from .type_aliases import UnitlibObject
-from unitlib.type_aliases import NDArrayLike
 
 
 def as_array(x: Union[NDArrayLike, UnitlibObject]) -> UnitlibObject:

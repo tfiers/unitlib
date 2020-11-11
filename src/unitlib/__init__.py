@@ -7,4 +7,4 @@ except ModuleNotFoundError:
     pass  # A matplotlib installation is not required.
 else:
     # But if it is installed, allow it to plot unitlib Arrays.
-    from . import matplotlib_support
+    from .support import matplotlib_support

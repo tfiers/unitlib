@@ -1,6 +1,6 @@
 from .compound_unit import CompoundUnit
-from ..unit import DataUnit
-from ...backwards_compatibility import TYPE_CHECKING
+from unitlib.core_objects.unit import DataUnit
+from unitlib.support.backwards_compatibility import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .unit_atom import UnitAtom, DataUnitAtom, dimensionless
