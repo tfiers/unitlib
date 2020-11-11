@@ -11,11 +11,15 @@ UfuncHandler = Callable[[UfuncArgs], UfuncOutput]
 
 
 ufunc_handlers: Dict[np.ufunc, UfuncHandler] = {}
+#   Used in `Array.__array_ufunc__` to look up which function to use to handle the given
+#   arguments.
 
 
 def implements(ufuncs: Iterable[np.ufunc]):
-    """ Decorator to register a function as handling specific NumPy ufuncs. """
-
+    """
+    Decorator to register a function as handling specific NumPy ufuncs called on an
+    `Array` object.
+    """
     # Called at `implements(..)`-time.
 
     def decorator(ufunc_handler: UfuncHandler):
