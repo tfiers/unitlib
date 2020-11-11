@@ -120,11 +120,11 @@ class Array(NDArrayOperatorsMixin):
 
     #
     #
-    # ----------
-    # Arithmetic
+    # ----------------
+    # ndarray wrapping
 
     # See "Writing custom array containers"[1] from the NumPy manual for info on the
-    # below `__array_ufunc__` and `__array_function__` methods.
+    # below `__array_ufunc__`, `__array_function__`, and `__array__` methods.
     #
     # # [1](https://numpy.org/doc/stable/user/basics.dispatch.html)
 
@@ -172,6 +172,18 @@ class Array(NDArrayOperatorsMixin):
             f"Unitlib objects do not yet support being used with function"
             f"`{func.__name__}`. {self._DIY_help_text}"
         )
+
+    def __array__(self, dtype=None):
+        """
+        Called by `np.array()` or `np.asarray()`.
+
+        This happens e.g. when plotting an `Array` with matplotlib when
+        `unitlib.enable_auto_axis_labelling()` hasn't been called yet.
+        """
+        if dtype is None:
+            return self.data_in_display_units
+        else:
+            return self.data_in_display_units.astype(dtype)
 
     _DIY_help_text = (  # Shown when a NumPy operation is not implemented yet for our Array.
         "You can get the bare numeric data (a plain NumPy array) "
