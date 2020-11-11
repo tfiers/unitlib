@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 import numpy as np
 
@@ -10,7 +10,7 @@ from .ufunc_args import UfuncArgs, BinaryUfuncInputs
 
 def make_ufunc_output(
     new_display_unit: Unit,
-    numpy_ufunc_output: np.ndarray,
+    numpy_ufunc_output: Union[np.ndarray, np.number],
 ) -> UfuncOutput:
     """ Select/create output object of correct type """
     if new_display_unit == dimensionless:

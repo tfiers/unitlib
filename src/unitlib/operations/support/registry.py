@@ -6,7 +6,7 @@ from unitlib.core_objects.support.type_aliases import UnitlibObject
 from .ufunc_args import UfuncArgs
 
 
-UfuncOutput = Union[UnitlibObject, np.ndarray, bool]
+UfuncOutput = Union[UnitlibObject, np.ndarray, np.number, bool]
 UfuncHandler = Callable[[UfuncArgs], UfuncOutput]
 
 
