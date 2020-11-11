@@ -15,7 +15,7 @@ class UfuncArgs:
     ufunc: np.ufunc
     method: str
     inputs: Tuple[UfuncInput, ...]
-    kwargs: Dict[str, Any]
+    ufunc_kwargs: Dict[str, Any]
 
     @property
     def is_unary(self) -> bool:

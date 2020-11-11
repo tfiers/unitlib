@@ -20,28 +20,28 @@ def make_ufunc_output(
 
 
 def make_binary_ufunc_output(
-    ufunc_args: UfuncArgs,
+    args: UfuncArgs,
     inputs: BinaryUfuncInputs,
     new_display_unit: Unit,
     left_numpy_ufunc_arg: Optional[np.ndarray] = None,
     right_numpy_ufunc_arg: Optional[np.ndarray] = None,
 ) -> UfuncOutput:
 
-    is_in_place = ufunc_args.kwargs.get("out") is (inputs.left_operand,)
+    is_in_place = args.ufunc_kwargs.get("out") is (inputs.left_operand,)
     #      Whether this __array_ufunc__ call is an in-place operation such as
     #      `array *= 2`. See `numpy.lib.mixins._inplace_binary_method`, which added
     #      the "out" kwarg (as `out=(self,)`).
 
     if is_in_place:
-        ufunc_args.kwargs.update(out=inputs.left_operand.data)
+        args.ufunc_kwargs.update(out=inputs.left_operand.data)
 
     if left_numpy_ufunc_arg is None:
         left_numpy_ufunc_arg = inputs.left_array.data
     if right_numpy_ufunc_arg is None:
         right_numpy_ufunc_arg = inputs.right_array.data
 
-    numpy_ufunc_output = ufunc_args.ufunc(
-        left_numpy_ufunc_arg, right_numpy_ufunc_arg, **ufunc_args.kwargs
+    numpy_ufunc_output = args.ufunc(
+        left_numpy_ufunc_arg, right_numpy_ufunc_arg, **args.ufunc_kwargs
     )
 
     if is_in_place:

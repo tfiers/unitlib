@@ -17,12 +17,12 @@ from .support import make_binary_ufunc_output, UfuncOutput, implements, UfuncArg
 
 
 @implements([np.multiply])
-def multiply(ufunc_args: UfuncArgs) -> UfuncOutput:
+def multiply(args: UfuncArgs) -> UfuncOutput:
 
     try:
-        inputs = ufunc_args.parse_binary_inputs()
+        inputs = args.parse_binary_inputs()
     except NonNumericDataException as exception:
-        left_operand, right_operand = ufunc_args.inputs
+        left_operand, right_operand = args.inputs
         if isinstance(left_operand, Prefix):
             prefix = left_operand
             # Syntax to create a new prefixed unit. Example: `mV = milli * volt`.
@@ -53,4 +53,4 @@ def multiply(ufunc_args: UfuncArgs) -> UfuncOutput:
         return new_display_unit
 
     else:
-        return make_binary_ufunc_output(ufunc_args, inputs, new_display_unit)
+        return make_binary_ufunc_output(args, inputs, new_display_unit)

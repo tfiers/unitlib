@@ -20,9 +20,9 @@ from .support import make_binary_ufunc_output, implements, UfuncOutput, UfuncArg
 
 
 @implements([np.power])
-def power(ufunc_args: UfuncArgs) -> UfuncOutput:
+def power(args: UfuncArgs) -> UfuncOutput:
 
-    inputs = ufunc_args.parse_binary_inputs()
+    inputs = args.parse_binary_inputs()
 
     if inputs.right_array.data_unit is not dimensionless:
         raise ValueError(
@@ -61,5 +61,5 @@ def power(ufunc_args: UfuncArgs) -> UfuncOutput:
             left_numpy_ufunc_arg = inputs.left_array.data
 
         return make_binary_ufunc_output(
-            ufunc_args, inputs, new_display_unit, left_numpy_ufunc_arg
+            args, inputs, new_display_unit, left_numpy_ufunc_arg
         )

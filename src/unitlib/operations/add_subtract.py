@@ -21,10 +21,10 @@ from .support import make_binary_ufunc_output, UfuncOutput, implements, UfuncArg
 
 
 @implements([np.add, np.subtract])
-def add_subtract(ufunc_args: UfuncArgs) -> UfuncOutput:
+def add_subtract(args: UfuncArgs) -> UfuncOutput:
 
-    inputs = ufunc_args.parse_binary_inputs()
-    op_name = ufunc_args.ufunc.__name__
+    inputs = args.parse_binary_inputs()
+    op_name = args.ufunc.__name__
 
     # 800 mV + volt
     if isinstance(inputs.left_array, Unit) or isinstance(inputs.right_array, Unit):
@@ -32,7 +32,7 @@ def add_subtract(ufunc_args: UfuncArgs) -> UfuncOutput:
         # units (if they're compatible), by interpreting the `Unit` as a `Quantity` with
         # value = 1. But that's probably not what the user intended.
         if isinstance(inputs.left_array, Unit):
-            if ufunc_args.ufunc == np.add:  # add to a Unit
+            if args.ufunc == np.add:  # add to a Unit
                 preposition = "to "
             else:  # subtract from a Unit
                 preposition = "from "
@@ -58,4 +58,4 @@ def add_subtract(ufunc_args: UfuncArgs) -> UfuncOutput:
     else:
         new_display_unit = inputs.right_array.display_unit
 
-    return make_binary_ufunc_output(ufunc_args, inputs, new_display_unit)
+    return make_binary_ufunc_output(args, inputs, new_display_unit)

@@ -30,10 +30,10 @@ ordering_comparators = (
 
 
 @implements(equality_comparators + ordering_comparators)
-def compare(ufunc_args: UfuncArgs) -> Union[np.ndarray, bool]:
+def compare(args: UfuncArgs) -> Union[np.ndarray, bool]:
 
-    if ufunc_args.ufunc == np.not_equal:
-        new_args = copy(ufunc_args)
+    if args.ufunc == np.not_equal:
+        new_args = copy(args)
         new_args.ufunc = np.equal
         is_equal = compare(new_args)
         if isinstance(is_equal, bool):
@@ -42,10 +42,10 @@ def compare(ufunc_args: UfuncArgs) -> Union[np.ndarray, bool]:
             return np.logical_not(is_equal)
 
     try:
-        inputs = ufunc_args.parse_binary_inputs()
+        inputs = args.parse_binary_inputs()
     except NonNumericDataException as exception:
         # One of the operands is e.g. `None`, as in `8 mV == None`.
-        if ufunc_args.ufunc == np.equal:
+        if args.ufunc == np.equal:
             return False
         else:
             raise exception
@@ -54,17 +54,17 @@ def compare(ufunc_args: UfuncArgs) -> Union[np.ndarray, bool]:
     if (
         isinstance(inputs.left_array, Unit)
         and isinstance(inputs.right_array, Unit)
-        and ufunc_args.ufunc == np.equal
+        and args.ufunc == np.equal
     ):
         return hash(inputs.left_array) == hash(inputs.right_array)
 
     # 8 mV > 9 newton
     elif (
-        ufunc_args.ufunc in ordering_comparators
+        args.ufunc in ordering_comparators
         and inputs.left_array.data_unit != inputs.right_array.data_unit
     ):
         raise IncompatibleUnitsError(
-            f"Ordering comparator '{ufunc_args.ufunc.__name__}' cannot be used between "
+            f"Ordering comparator '{args.ufunc.__name__}' cannot be used between "
             f'incompatible Units "{inputs.left_array.display_unit}" '
             f'and "{inputs.right_array.display_unit}".'
         )
@@ -76,15 +76,15 @@ def compare(ufunc_args: UfuncArgs) -> Union[np.ndarray, bool]:
     #  - [8 3] newton != [8 2] newton -> [False, True]
     #  - [8 3] newton == [8 2] newton -> [True, False]
     else:
-        data_comparison_result = ufunc_args.ufunc(
+        data_comparison_result = args.ufunc(
             inputs.left_array.data,
             inputs.right_array.data,
-            **ufunc_args.kwargs,
+            **args.ufunc_kwargs,
         )
         # Note that there are no in-place versions of comparason dunders. They wouldn't
         # make sense anyway: the type changes from `unitlib.Array` to `np.ndarray`.
 
-        if ufunc_args.ufunc in ordering_comparators:
+        if args.ufunc in ordering_comparators:
             return data_comparison_result
         else:
             unit_comparison_result = (
