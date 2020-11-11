@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional, Union, Tuple
 
 import numpy as np
 
@@ -8,9 +8,12 @@ from .registry import UfuncOutput
 from .ufunc_args import UfuncArgs, BinaryUfuncInputs
 
 
+NumPyObject = Union[np.ndarray, np.number]
+
+
 def make_ufunc_output(
     new_display_unit: Unit,
-    numpy_ufunc_output: Union[np.ndarray, np.number],
+    numpy_ufunc_output: NumPyObject,
 ) -> UfuncOutput:
     """ Select/create output object of correct type """
     if new_display_unit == dimensionless:
@@ -23,8 +26,7 @@ def make_binary_ufunc_output(
     args: UfuncArgs,
     inputs: BinaryUfuncInputs,
     new_display_unit: Unit,
-    left_numpy_ufunc_arg: Optional[np.ndarray] = None,
-    right_numpy_ufunc_arg: Optional[np.ndarray] = None,
+    custom_numpy_ufunc_inputs: Optional[Tuple[NumPyObject, NumPyObject]] = None,
 ) -> UfuncOutput:
 
     is_in_place = args.ufunc_kwargs.get("out") is (inputs.left_operand,)
@@ -35,14 +37,12 @@ def make_binary_ufunc_output(
     if is_in_place:
         args.ufunc_kwargs.update(out=inputs.left_operand.data)
 
-    if left_numpy_ufunc_arg is None:
-        left_numpy_ufunc_arg = inputs.left_array.data
-    if right_numpy_ufunc_arg is None:
-        right_numpy_ufunc_arg = inputs.right_array.data
+    if custom_numpy_ufunc_inputs:
+        numpy_ufunc_inputs = custom_numpy_ufunc_inputs
+    else:
+        numpy_ufunc_inputs = (inputs.left_array.data, inputs.right_array.data)
 
-    numpy_ufunc_output = args.ufunc(
-        left_numpy_ufunc_arg, right_numpy_ufunc_arg, **args.ufunc_kwargs
-    )
+    numpy_ufunc_output = args.ufunc(*numpy_ufunc_inputs, **args.ufunc_kwargs)
 
     if is_in_place:
         inputs.left_operand.display_unit = new_display_unit

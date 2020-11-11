@@ -60,6 +60,10 @@ def power(args: UfuncArgs) -> UfuncOutput:
         else:
             left_numpy_ufunc_arg = inputs.left_array.data
 
+        right_numpy_ufunc_arg = inputs.right_array.data
         return make_binary_ufunc_output(
-            args, inputs, new_display_unit, left_numpy_ufunc_arg
+            args,
+            inputs,
+            new_display_unit,
+            (left_numpy_ufunc_arg, right_numpy_ufunc_arg),
         )
