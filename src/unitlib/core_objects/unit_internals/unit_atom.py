@@ -1,6 +1,6 @@
 from typing import Optional
 
-from unitlib.core_objects.unit import DataUnit
+from unitlib.core_objects.unit import DataUnit, Unit
 from unitlib.support.backwards_compatibility import TYPE_CHECKING
 from .powered_unit_atom import PoweredUnitAtom
 
@@ -56,7 +56,7 @@ class DataUnitAtom(DataUnit, UnitAtom):
         return hash(self.name)
 
 
-def define_unit(name: str, relation: Optional["Quantity"] = None):
+def define_unit(name: str, relation: Optional["Quantity"] = None) -> Unit:
 
     if relation:
         return UnitAtom(
