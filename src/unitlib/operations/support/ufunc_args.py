@@ -4,8 +4,8 @@ from typing import Tuple, Dict, Any
 import numpy as np
 
 from unitlib.core_objects.array import NonNumericDataException, Array
-from unitlib.core_objects.type_aliases import UfuncInput
-from unitlib.core_objects.util import as_array
+from unitlib.core_objects.support.type_aliases import UfuncInput
+from unitlib.core_objects.support.util import as_array
 
 
 @dataclass

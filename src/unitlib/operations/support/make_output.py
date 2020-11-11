@@ -3,7 +3,7 @@ from typing import Optional
 import numpy as np
 
 from unitlib.core_objects import Unit, dimensionless
-from unitlib.core_objects.util import create_Array_or_Quantity
+from unitlib.core_objects.support.util import create_Array_or_Quantity
 from .registry import UfuncOutput
 from .ufunc_args import UfuncArgs, BinaryUfuncInputs
 

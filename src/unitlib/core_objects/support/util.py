@@ -2,9 +2,9 @@ from typing import Union, Optional
 
 import numpy as np
 
-from . import Array, Quantity, Unit, dimensionless
+from unitlib.core_objects import Array, Quantity, Unit, dimensionless
 from .type_aliases import UnitlibObject
-from ..type_aliases import NDArrayLike
+from unitlib.type_aliases import NDArrayLike
 
 
 def as_array(x: Union[NDArrayLike, UnitlibObject]) -> UnitlibObject:

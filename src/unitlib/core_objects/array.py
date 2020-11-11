@@ -7,7 +7,7 @@ from ..backwards_compatibility import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .unit import Unit, DataUnit
-    from .type_aliases import UfuncInput, ArrayIndex, ArraySlice
+    from .support.type_aliases import UfuncInput, ArrayIndex, ArraySlice
 
 
 class Array(NDArrayOperatorsMixin):
@@ -187,7 +187,7 @@ class Array(NDArrayOperatorsMixin):
         return len(self.data)
 
     def __getitem__(self, index: "ArrayIndex") -> "ArraySlice":
-        from .util import create_Array_or_Quantity
+        from unitlib.core_objects.support.util import create_Array_or_Quantity
 
         data_slice: np.ndarray = self.data[index]
         output = create_Array_or_Quantity(data_slice, self.display_unit, self.name)
@@ -195,7 +195,7 @@ class Array(NDArrayOperatorsMixin):
 
     def __setitem__(self, index: "ArrayIndex", value: "ArraySlice"):
         from .unit import Unit, IncompatibleUnitsError
-        from .util import as_array
+        from unitlib.core_objects.support.util import as_array
 
         if isinstance(value, Unit):
             raise ValueError(

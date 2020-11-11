@@ -2,7 +2,7 @@ from typing import Dict, Iterable, Union, Callable
 
 import numpy as np
 
-from unitlib.core_objects.type_aliases import UnitlibObject
+from unitlib.core_objects.support.type_aliases import UnitlibObject
 from .ufunc_args import UfuncArgs
 
 
