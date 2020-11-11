@@ -13,9 +13,6 @@ if TYPE_CHECKING:
 class Quantity(Array):
     """
     A scalar number with a physical unit, such as `8 * mV`.
-
-    In addition to `Array`'s functionality, it has a `value` property, which is
-    `data_in_display_units` as a Python scalar (and not a 0-dimensional NumPy array).
     """
 
     def __init__(
@@ -48,10 +45,12 @@ class Quantity(Array):
             name,
             value_is_given_in_display_units,
         )
+        self.data = self.data[()]
 
+    # Synonym (to have consistency with __init__'s `value` argument).
     @property
     def value(self):
-        return self.data_in_display_units.item()
+        return self.data_in_display_units
 
     _DIY_help_text = (
         "You can get the bare numeric value via `quantity.value` "
