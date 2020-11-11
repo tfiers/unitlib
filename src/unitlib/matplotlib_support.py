@@ -14,7 +14,7 @@ import unitlib
 
 
 array_names: Dict[Axis, str] = WeakKeyDictionary()
-#   See `convert` below. The WeakKeyDictionary makes sure we don't prevent garbage
+#   See `default_units` below. The WeakKeyDictionary makes sure we don't prevent garbage
 #   collection of an Axis when we're the only place left holding a reference to it.
 
 
@@ -26,20 +26,23 @@ class ArrayPlotInterface(ConversionInterface):
         `xaxis.set_units()` or `plot(..., xunits=...)`. When these are not set, this
         class's `default_units` is used.
         """
-        if array.name is None:
-            name_to_display = ""
-        else:
-            name_to_display = array.name
-        # Trick learned from `unyt`: Save array name now, cause when we have to specify
-        # the axis label -- namely in `axisinfo` below -- we no longer have access to
-        # the array. We make the link via a reference to the Axis object, which __is__
-        # available in both methods (and presumably unique).
-        array_names[axis] = name_to_display
-
         return array.data_in_display_units
 
     @staticmethod
     def default_units(array: unitlib.Array, axis: Axis) -> unitlib.Unit:
+        if array.name is None:
+            name_to_display = ""
+        else:
+            name_to_display = array.name
+        # Save array name now, cause when we have to specify the axis label -- namely in
+        # `axisinfo` below -- we no longer have access to the array.
+        array_names[axis] = name_to_display
+        # - We make the link via a reference to the Axis object, which __is__
+        #   available in both methods (and presumably unique).
+        # - Trick learned from unyt.
+        # - Note that we cannot do this mapping in `convert` (as presumably that gets
+        #   called after `axisinfo`, i.e. too late).
+
         return array.display_unit
 
     @staticmethod
