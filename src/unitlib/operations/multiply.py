@@ -45,16 +45,17 @@ def multiply(args: UfuncArgs) -> UfuncOutput:
 
 
 def create_prefixed_unit(prefix: Prefix, right_operand: UfuncInput):
-    # Syntax to create a new prefixed unit. Example: `mV = milli * volt`.
-    if isinstance(right_operand, DataUnitAtom):
-        data_unit = right_operand
+    # Syntax to create a new prefixed unit.
+    # Examples: `mV = milli * volt`, `μg = micro * gram`.
+    if isinstance(right_operand, UnitAtom):
+        unit_atom = right_operand
         return UnitAtom(
-            name=f"{prefix.symbol}{data_unit.name}",
-            data_unit=data_unit,
-            scale=prefix.factor,
+            name=f"{prefix.symbol}{unit_atom.name}",
+            data_unit=unit_atom.data_unit,
+            scale=prefix.factor * unit_atom.scale,
         )
     else:
         raise ValueError(
-            "Can only create prefixed units from `DataUnitAtom`s. "
+            "Can only create prefixed units from `UnitAtom`s. "
             f"(Got {repr(right_operand)})."
         )
