@@ -39,9 +39,10 @@ def add_subtract(args: UfuncArgs) -> UfuncOutput:
         else:  # add/subtract a Unit
             preposition = ""
 
-        raise ValueError(
+        raise TypeError(
             f"Cannot {op_name} {preposition}a bare unit. "
-            f'Operands were "{inputs.left_array}" and "{inputs.right_array}".'
+            f'Operands were "{inputs.left_array}" and "{inputs.right_array}". '
+            "Consider making a Quantity from the bare unit, like `1 * mV`."
         )
 
     # 800 mV + 1 newton
