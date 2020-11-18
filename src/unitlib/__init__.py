@@ -1,5 +1,5 @@
 from .core_objects import Unit, Quantity, Array, define_unit
-from .support.unit_support_wrapper import add_unit_support
+from .support.function_wrapper import add_unit_support
 
 # Do not import `auto_axis_labelling.py` by default, to spare the heavy matplotlib
 # import when it is not needed.

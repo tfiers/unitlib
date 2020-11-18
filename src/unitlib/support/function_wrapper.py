@@ -9,15 +9,19 @@ def add_unit_support(
     function: Callable[[np.ndarray, "..."], "..."]
 ) -> Callable[[Array, "..."], "..."]:
     """
-    Allow unitlib to be used with libraries that have no knowledge of unitlib `Array`s,
-    such as SciPy.
+    Function wrapper that allows Unitlib to be used with libraries that can only handle
+    NumPy arrays (and not Unitlib `Array`s), such as SciPy or Numba in 'nopython' (i.e.
+    fast) mode.
 
     Example:
-        from scipy.signal import find_peaks
+        from scipy.signal import find_peaks as find_peaks_orig
         from unitlib import add_unit_support
 
-        find_peaks_ = add_unit_support(find_peaks)
-        peaks, _ = find_peaks_(voltage_array, height=10 * mV)
+        find_peaks = add_unit_support(find_peaks_orig)
+        peaks, _ = find_peaks(voltage_array, height=10 * mV)
+
+    This wrapper replaces all Unitlib arguments by their `.data` when the function is
+    called (and leaves arguments of other types as is).
     """
 
     @wraps(function)
