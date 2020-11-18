@@ -3,7 +3,7 @@ from unitlib.core_objects.unit import DataUnit
 from unitlib.support.backwards_compatibility import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .unit_atom import UnitAtom, DataUnitAtom, dimensionless
+    from .unit_atom import UnitAtom, DataUnitAtom
 
 
 class PoweredUnitAtom(CompoundUnit):
@@ -37,6 +37,8 @@ class PoweredUnitAtom(CompoundUnit):
 
     # (mV⁻³)**2
     def _raised_to(self, power: int):
+        from .unit_atom import dimensionless
+
         new_power = self.power * power
         if new_power == 0:
             return dimensionless
