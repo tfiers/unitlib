@@ -5,7 +5,7 @@ import numpy as np
 
 from unitlib.core_objects.array import NonNumericDataException, Array
 from unitlib.core_objects.support.type_aliases import UfuncInput
-from unitlib.core_objects.support.util import as_array
+from unitlib.core_objects.support.util import as_Array
 
 
 @dataclass
@@ -30,8 +30,8 @@ class UfuncArgs:
     def parse_binary_inputs(self):
         try:
             left, right = self.inputs
-            left_array = as_array(left)
-            right_array = as_array(right)
+            left_array = as_Array(left)
+            right_array = as_Array(right)
             return BinaryUfuncInputs(left, right, left_array, right_array)
         except NonNumericDataException as exception:
             raise NonNumericDataException(

@@ -7,7 +7,7 @@ from unitlib.support.type_aliases import NDArrayLike
 from .type_aliases import UnitlibObject
 
 
-def as_array(x: Union[NDArrayLike, UnitlibObject]) -> UnitlibObject:
+def as_Array(x: Union[NDArrayLike, UnitlibObject]) -> UnitlibObject:
     if isinstance(x, Array):
         return x
     else:  # `x` is purely numeric (scalar or array-like).

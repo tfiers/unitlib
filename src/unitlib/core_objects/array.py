@@ -207,7 +207,7 @@ class Array(NDArrayOperatorsMixin):
 
     def __setitem__(self, index: "ArrayIndex", value: "ArraySlice"):
         from .unit import Unit, IncompatibleUnitsError
-        from unitlib.core_objects.support.util import as_array
+        from unitlib.core_objects.support.util import as_Array
 
         if isinstance(value, Unit):
             raise ValueError(
@@ -216,7 +216,7 @@ class Array(NDArrayOperatorsMixin):
             )
 
         try:
-            value_as_array = as_array(value)
+            value_as_array = as_Array(value)
 
         except NonNumericDataException as exception:
             raise NonNumericDataException(
