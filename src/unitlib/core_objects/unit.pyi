@@ -8,7 +8,7 @@ from unitlib import Quantity, Array
 from unitlib.prefixes import Prefix
 from unitlib.support.type_aliases import Scalar, NDArrayLike
 
-class Unit(Quantity):
+class Unit(Quantity, ABC):
     # ---------------
     # Core properties
     name: str
