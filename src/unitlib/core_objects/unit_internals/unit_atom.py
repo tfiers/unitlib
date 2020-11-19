@@ -13,7 +13,7 @@ class UnitAtom(PoweredUnitAtom):
     Eg "volt" or "mV";
     as contrasted with "mV²" (a `PoweredUnitAtom`) or "N·mV²" (a `CompoundUnit`).
 
-    Defining attributes:
+    Defining attributes (see `Unit`s documentation on them):
         - name: str
         - data_unit: DataUnitAtom
         - scale: float
